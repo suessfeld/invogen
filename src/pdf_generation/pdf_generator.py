@@ -1,6 +1,8 @@
-import json
+import calendar
 import os
 import random
+
+from faker import Faker
 
 import jinja2
 import pdfkit
@@ -8,6 +10,8 @@ import pdfkit
 import jsonpickle
 
 from bs4 import BeautifulSoup
+
+from pdf_generation.data_generator import generate_email, generate_date
 from util.constants import *
 from pdf_generation.GenerationAttributes import GenerationAttributes, BoundingBox
 
@@ -36,15 +40,15 @@ TODO: complete functionality with config and random values.
 
 
 def render(gen_attr: GenerationAttributes):
-    if os.path.exists("./src/pdf_generation/tmp/invoice.css"):
-        os.remove("./src/pdf_generation/tmp/invoice.css")
-    if os.path.exists("./src/pdf_generation/tmp/invoice.html"):
-        os.remove("./src/pdf_generation/tmp/invoice.html")
+    if os.path.exists(DEFAULT_TMP_PATH + "invoice.css"):
+        os.remove(DEFAULT_TMP_PATH + "invoice.css")
+    if os.path.exists(DEFAULT_TMP_PATH + "invoice.html"):
+        os.remove(DEFAULT_TMP_PATH + "invoice.html")
 
     template_loader = jinja2.FileSystemLoader('./')
     template_env = jinja2.Environment(loader=template_loader)
 
-    template_path = './src/pdf_generation/sample_invoice/invoice.html'
+    template_path = './sample_invoice/invoice.html'
     context = generate_context()
 
     with open(template_path) as html_file:
@@ -52,7 +56,7 @@ def render(gen_attr: GenerationAttributes):
 
     with open(template_path) as html_file:
         generate_bounding_boxes(html_file)
-    template_path = './src/pdf_generation/tmp/invoice.html'
+    template_path = DEFAULT_TMP_PATH + 'invoice.html'
     template = template_env.get_template(template_path)
 
     # TODO: Fix this line
@@ -91,11 +95,11 @@ Reads in the JS-Script file and appends the script to the html file.
 
 
 def add_js_to_html(html):
-    with open("./src/pdf_generation/position_generation_script.js") as script:
+    with open(DEFAULT_GENERATION_SCRIPT_PATH) as script:
         soup = BeautifulSoup(html, 'html.parser')
         soup.append(BeautifulSoup("<script>" + script.read() + "</script>", features="html.parser"))
 
-    with open('./src/pdf_generation/tmp/invoice.html', 'a+') as f:
+    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+') as f:
         f.write(str(soup))
 
 
@@ -122,7 +126,7 @@ def generate_bounding_boxes(html):
             """)
             output.append(tag)
 
-    with open('./src/pdf_generation/tmp/invoice.html', 'a+') as f:
+    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+') as f:
         f.write(str(output))
 
 
@@ -133,14 +137,16 @@ Generates a random context.
 
 
 def generate_context() -> {}:
+
+    fake = Faker('de_DE')
+    address = Address(fake.address())
+
     context = Context()
     context.company = Company()
-    context.company.address = Address()
-    context.company.name = "test company"
-    context.company.address.street = "Gumpendorfer Strasse"
-    context.company.address.city = "Wien"
-    context.company.address.postal = "1060"
-    context.company.email = "a.b@c.d"
+    context.company.address = address
+    context.company.name = fake.company()
+    context.company.email = generate_email(fake)
+    print(generate_date(fake))
     return context
 
 
@@ -153,4 +159,8 @@ class Company:
 
 
 class Address:
-    pass
+
+    def __init__(self, address):
+        self.address = address
+
+
