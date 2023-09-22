@@ -32,8 +32,8 @@ def fill_html(html):
             data_type = elem.attrs['data-type']
             try:
                 if data_type == 'logo':
-                    new_tag = soup.new_tag("img", src=provided_types[data_type](), style=f'height:{random.randint(80, 140)}px')
-                    elem.append(new_tag)
+                    elem['src'] = provided_types[data_type]()
+                    elem['style'] = f'height:{random.randint(80, 140)}px'
                 else:
                     output = provided_types[data_type]()
                     elem.string = output
