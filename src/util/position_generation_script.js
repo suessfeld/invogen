@@ -1,4 +1,4 @@
-window.addEventListener('load', function() {
+window.addEventListener('load', function () {
     var all = document.getElementsByTagName('*')
 
     for (var i = 0; i < all.length; i++) {
@@ -8,9 +8,10 @@ window.addEventListener('load', function() {
             var bottom = randomIntFromInterval(parseInt(boundingBox[1]), parseInt(boundingBox[3]));
             var left = randomIntFromInterval(parseInt(boundingBox[0]), parseInt(boundingBox[2]));
 
+            var rect = window.getComputedStyle(elem, null);
 
-            bottom = Math.min(bottom, parseInt(boundingBox[3]) - elem.offsetHeight);
-            left = Math.min(left, parseInt(boundingBox[2]) - elem.offsetWidth);
+            bottom = Math.min(bottom, parseInt(boundingBox[3]) - parseInt(rect.getPropertyValue("height")));
+            left = Math.min(left, parseInt(boundingBox[2]) - parseInt(rect.getPropertyValue("width")));
 
             elem.style.position = 'absolute';
             elem.style.left = left + "px";
