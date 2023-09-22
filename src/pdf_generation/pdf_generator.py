@@ -11,7 +11,7 @@ import jsonpickle
 
 from bs4 import BeautifulSoup
 
-from pdf_generation.data_generator import generate_email, generate_date
+from pdf_generation import html_parser
 from util.constants import *
 from pdf_generation.GenerationAttributes import GenerationAttributes, BoundingBox
 
@@ -45,27 +45,22 @@ def render(gen_attr: GenerationAttributes):
     if os.path.exists(DEFAULT_TMP_PATH + "invoice.html"):
         os.remove(DEFAULT_TMP_PATH + "invoice.html")
 
-    template_loader = jinja2.FileSystemLoader('./')
-    template_env = jinja2.Environment(loader=template_loader)
-
     template_path = './sample_invoice/invoice.html'
-    context = generate_context()
 
     with open(template_path) as html_file:
-        add_js_to_html(html_file)
+        html_parser.fill_html(html_file)
 
     with open(template_path) as html_file:
         generate_bounding_boxes(html_file)
+
+    add_js_to_html()
+
     template_path = DEFAULT_TMP_PATH + 'invoice.html'
-    template = template_env.get_template(template_path)
-
-    # TODO: Fix this line
-    output_text = template.render(jsonpickle.decode(jsonpickle.encode(context, unpicklable=False)))
-
     config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
 
-    pdf = pdfkit.from_string(output_text, gen_attr.output_path, configuration=config)
-    return pdf
+    with open(template_path) as html_file:
+        pdf = pdfkit.from_string(html_file.read(), gen_attr.output_path, configuration=config, css=CSS_PATH)
+        return pdf
 
 
 """
@@ -94,9 +89,9 @@ Reads in the JS-Script file and appends the script to the html file.
 """
 
 
-def add_js_to_html(html):
+def add_js_to_html():
     with open(DEFAULT_GENERATION_SCRIPT_PATH) as script:
-        soup = BeautifulSoup(html, 'html.parser')
+        soup = BeautifulSoup()
         soup.append(BeautifulSoup("<script>" + script.read() + "</script>", features="html.parser"))
 
     with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+') as f:
@@ -137,30 +132,9 @@ Generates a random context.
 
 
 def generate_context() -> {}:
+    pass
 
-    fake = Faker('de_DE')
-    address = Address(fake.address())
-
-    context = Context()
-    context.company = Company()
-    context.company.address = address
-    context.company.name = fake.company()
-    context.company.email = generate_email(fake)
-    print(generate_date(fake))
-    return context
 
 
 class Context:
     pass
-
-
-class Company:
-    pass
-
-
-class Address:
-
-    def __init__(self, address):
-        self.address = address
-
-
