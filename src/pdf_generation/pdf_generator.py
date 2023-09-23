@@ -59,7 +59,7 @@ def render(gen_attr: GenerationAttributes):
     config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
 
     with open(template_path) as html_file:
-        pdf = pdfkit.from_string(html_file.read(), gen_attr.output_path, configuration=config, css=CSS_PATH)
+        pdf = pdfkit.from_string(html_file.read(), gen_attr.output_path, configuration=config, options={"enable-local-file-access": ""}, css="./sample_invoice/invoice.css")
         return pdf
 
 
