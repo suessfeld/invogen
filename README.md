@@ -1,2 +1,2 @@
 # InvoGen
-Invoice Generator for Bachlor Thesis by Elias Voill.
+Invoice Generator for Elias Voill's bachelor's thesis.
