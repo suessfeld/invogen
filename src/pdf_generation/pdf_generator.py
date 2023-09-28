@@ -1,10 +1,9 @@
-import calendar
+import io
 import os
-import random
+import re
 
-from faker import Faker
+from contextlib import redirect_stdout
 
-import jinja2
 import pdfkit
 
 import jsonpickle
@@ -12,6 +11,7 @@ import jsonpickle
 from bs4 import BeautifulSoup
 
 from pdf_generation import html_parser
+from pdf_generation.Annotation import *
 from util.constants import *
 from pdf_generation.GenerationAttributes import GenerationAttributes, BoundingBox
 
@@ -22,14 +22,22 @@ The output name is specified in constants.py.
 
 
 def generate_pdfs(gen_attr: GenerationAttributes):
-    output_path = gen_attr.output_path
+    invoice_output_path = gen_attr.invoice_output_path
+    annotation_output_path = gen_attr.annotation_output_path
 
-    if not os.path.exists(gen_attr.output_path):
-        os.mkdir(gen_attr.output_path)
+
+    if not os.path.exists(gen_attr.invoice_output_path):
+        os.mkdir(gen_attr.invoice_output_path)
+
+    if not os.path.exists(gen_attr.annotation_output_path):
+        os.mkdir(gen_attr.annotation_output_path)
 
     for i in range(gen_attr.amount):
-        gen_attr.output_path = output_path
-        gen_attr.output_path = output_path + DEFAULT_OUTPUT_NAME + str(i) + ".pdf"
+        gen_attr.invoice_output_path = invoice_output_path
+        gen_attr.invoice_output_path = invoice_output_path + DEFAULT_OUTPUT_NAME + str(i) + ".pdf"
+
+        gen_attr.annotation_output_path = annotation_output_path
+        gen_attr.annotation_output_path = annotation_output_path + DEFAULT_OUTPUT_NAME + str(i) + ".json"
         render(gen_attr)
 
 
@@ -47,41 +55,44 @@ def render(gen_attr: GenerationAttributes):
 
     template_path = './sample_invoice/invoice.html'
 
+    annotation_object = Annotation()
+
     with open(template_path) as html_file:
-        html_parser.fill_html(html_file)
+        html_parser.fill_html(html_file, annotation_object)
 
     with open(template_path) as html_file:
         generate_bounding_boxes(html_file)
 
+    # TODO: This should be refactored
     add_js_to_html()
 
     template_path = DEFAULT_TMP_PATH + 'invoice.html'
     config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
 
     with open(template_path) as html_file:
-        pdf = pdfkit.from_string(html_file.read(), gen_attr.output_path, configuration=config, options={"enable-local-file-access": ""}, css="./sample_invoice/invoice.css")
+
+        with io.StringIO() as buf, redirect_stdout(buf):
+            pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config, options={"enable-local-file-access": ""}, css="./sample_invoice/invoice.css", verbose=True)
+            #extract_and_save_position(buf, gen_attr.annotation_output_path, annotation_object)
         return pdf
 
 
 """
-Extracts the needed config information from the html-document.
-TODO: Change functionality to extract position for JSON generation.
+Extracts position information from the html file
+TODO: Implement
 """
 
 
-def extract_html_information(html) -> dict:
-    element_dict = dict()
+def extract_and_save_position(buf, annotation_output_path, annotation_object):
+    with open(annotation_output_path, "a+") as file:
+        string = buf.getvalue()
+        matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;", string)
 
-    soup = BeautifulSoup(html, 'html.parser')
-    elems = soup.findAll()
+        for m in matches:
+            string_arr = m.split(';')
+            annotation_object.data[string_arr[1]].position = Position(string_arr[2], string_arr[3])
 
-    for elem in elems:
-        if 'data-position' in elem.attrs:
-            position_string = elem.attrs['data-position'].split(' ')
-            element_dict[elem.attrs['class'][0]] = vars(BoundingBox(int(position_string[0]), int(position_string[1]),
-                                                                    int(position_string[2]), int(position_string[3])))
-
-    return element_dict
+        file.write(jsonpickle.encode(annotation_object, unpicklable=False, max_depth=10))
 
 
 """

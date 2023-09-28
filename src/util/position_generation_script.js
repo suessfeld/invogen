@@ -9,19 +9,15 @@ window.addEventListener('load', function () {
                 var bottom = randomIntFromInterval(parseInt(boundingBox[1]), parseInt(boundingBox[3]));
                 var left = randomIntFromInterval(parseInt(boundingBox[0]), parseInt(boundingBox[2]));
 
-                var rect = window.getComputedStyle(elem, null);
 
-                console.log(boundingBox[0]
-                    + "\n" + boundingBox[2]
-                    + "\n" + left
-                    + "\nwidth: " + elem.scrollWidth
-                    + "\n" + Math.min(left, parseInt(boundingBox[2]) - elem.scrollWidth))
                 bottom = Math.min(bottom, parseInt(boundingBox[3]) - elem.scrollHeight);
                 left = Math.min(left, parseInt(boundingBox[2]) - elem.scrollWidth);
 
                 elem.style.position = 'absolute';
                 elem.style.left = left + "px";
                 elem.style.bottom = bottom + "px";
+
+                console.log("position-absolute;" + elem.id + ";" + left + ";" + bottom + ";");
             }
         }
 

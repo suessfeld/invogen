@@ -13,12 +13,15 @@ Generates invoices with the specified params.
 If the seed flag is not set, a random seed will be used.
 """
 @app.command()
-def generate(output_path: Optional[str] = None, amount: int = 0, seed: Optional[str] = None):
+def generate(invoice_output_path: Optional[str] = None, annotation_output_path: Optional[str] = None, amount: int = 0, seed: Optional[str] = None):
 
     gen_attr = pdf_generation.GenerationAttributes()
 
-    if output_path is None:
-        gen_attr.output_path = DEFAULT_OUTPUT_DIR_PATH
+    if invoice_output_path is None:
+        gen_attr.invoice_output_path = DEFAULT_INVOICE_OUTPUT_PATH
+
+    if annotation_output_path is None:
+        gen_attr.annotation_output_path = DEFAULT_ANNOTATION_OUTPUT_PATH
 
     gen_attr.seed = seed
     gen_attr.amount = amount

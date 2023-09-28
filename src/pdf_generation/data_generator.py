@@ -1,12 +1,8 @@
 import calendar
 import random
 import string
-import inspect
-import types
-from os.path import join
-import sys
-
 import requests
+
 from faker import Faker
 
 import pdf_generation

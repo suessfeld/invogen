@@ -4,8 +4,8 @@ Represents the attributes for a single generation job.
 class GenerationAttributes:
     amount: int
     seed: str
-    output_path: str
-
+    invoice_output_path: str
+    annotation_output_path: str
 
 class BoundingBox:
     def __init__(self, x1, y1, x2, y2):
