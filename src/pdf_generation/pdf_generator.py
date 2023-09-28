@@ -60,8 +60,10 @@ def render(gen_attr: GenerationAttributes):
     with open(template_path) as html_file:
         html_parser.fill_html(html_file, annotation_object)
 
-    with open(template_path) as html_file:
-        generate_bounding_boxes(html_file)
+    if gen_attr.display_bounding_boxes:
+        with open(template_path) as html_file:
+            generate_bounding_boxes(html_file)
+        gen_attr.display_bounding_boxes = False
 
     # TODO: This should be refactored
     add_js_to_html()

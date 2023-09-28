@@ -1,19 +1,19 @@
 import typer
-import json
 from typing import Optional
 
 import pdf_generation
 
 from util.constants import *
 
-app = typer.Typer()
+app = typer.Typer(help="Invoice Generation Tool by Elias Voill")
 
 """
 Generates invoices with the specified params.
 If the seed flag is not set, a random seed will be used.
 """
 @app.command()
-def generate(invoice_output_path: Optional[str] = None, annotation_output_path: Optional[str] = None, amount: int = 0, seed: Optional[str] = None):
+def generate(invoice_output_path: Optional[str] = None, annotation_output_path: Optional[str] = None, amount: int = 0,
+             display_bounding_boxes: Optional[bool] = False):
 
     gen_attr = pdf_generation.GenerationAttributes()
 
@@ -22,8 +22,7 @@ def generate(invoice_output_path: Optional[str] = None, annotation_output_path: 
 
     if annotation_output_path is None:
         gen_attr.annotation_output_path = DEFAULT_ANNOTATION_OUTPUT_PATH
-
-    gen_attr.seed = seed
+    gen_attr.display_bounding_boxes = display_bounding_boxes
     gen_attr.amount = amount
 
     pdf_generation.generate_pdfs(gen_attr)
