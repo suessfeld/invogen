@@ -21,3 +21,6 @@ DEFAULT_GENERATION_SCRIPT_PATH = "./src/util/position_generation_script.js"
 CSS_PATH = "./sample_invoice/invoice.css"
 
 LOGO_API_KEY = "NglW5BMfsKzOQlKS10ETzw==n33giYi70AugXKb5"
+
+# TODO: THIS PATH IS ONLY CORRECT FOR WINDOWS MACHINES AND WILL BE CHANGED FOR DOCKER-USAGE!
+DEFAULT_WKTHMLTOPDF_PATH = "C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe"
