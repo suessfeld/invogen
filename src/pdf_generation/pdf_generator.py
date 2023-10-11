@@ -75,7 +75,7 @@ def render(gen_attr: GenerationAttributes):
 
         with io.StringIO() as buf, redirect_stdout(buf):
             pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config, options={"enable-local-file-access": ""}, css="./sample_invoice/invoice.css", verbose=True)
-            #extract_and_save_position(buf, gen_attr.annotation_output_path, annotation_object)
+            extract_and_save_position(buf, gen_attr.annotation_output_path, annotation_object)
         return pdf
 
 
@@ -88,11 +88,13 @@ TODO: Implement
 def extract_and_save_position(buf, annotation_output_path, annotation_object):
     with open(annotation_output_path, "a+") as file:
         string = buf.getvalue()
-        matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;", string)
+        matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;[0-9]+;[0-9]+", string)
 
         for m in matches:
             string_arr = m.split(';')
-            annotation_object.data[string_arr[1]].position = Position(string_arr[2], string_arr[3])
+            annotation_object.data[string_arr[1]] = Annotation()
+            annotation_object.data[string_arr[1]].position = Position(string_arr[2], string_arr[3],
+                                                                      string_arr[4], string_arr[5])
 
         file.write(jsonpickle.encode(annotation_object, unpicklable=False, max_depth=10))
 
@@ -113,7 +115,6 @@ def add_js_to_html():
 
 """
 Generates visual bounding boxes for all randomly placed Elements.
-TODO: Make this feature an option
 """
 
 

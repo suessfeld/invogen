@@ -17,7 +17,7 @@ window.addEventListener('load', function () {
                 elem.style.left = left + "px";
                 elem.style.bottom = bottom + "px";
 
-                console.log("position-absolute;" + elem.id + ";" + left + ";" + bottom + ";");
+                console.log("position-absolute;" + elem.id + ";" + left + ";" + bottom + ";" + (left + elem.scrollWidth) + ";" + (bottom + elem.scrollHeight));
             }
         }
 

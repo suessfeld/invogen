@@ -2,12 +2,16 @@ import time
 
 
 class Position:
-    x: int
-    y: int
+    x1: int
+    y1: int
+    x2: int
+    y2: int
 
-    def __init__(self, x, y):
-        self.x = int(x)
-        self.y = int(y)
+    def __init__(self, x1, y1, x2, y2):
+        self.x1 = int(x1)
+        self.y1 = int(y1)
+        self.x2 = int(x2)
+        self.y2 = int(y2)
 
 
 class DataObject:
