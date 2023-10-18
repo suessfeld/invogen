@@ -92,7 +92,7 @@ def extract_and_save_position(buf, annotation_output_path, annotation_object):
 
         for m in matches:
             string_arr = m.split(';')
-            annotation_object.data[string_arr[1]] = Annotation()
+            annotation_object.data[string_arr[1]] = DataObject()
             annotation_object.data[string_arr[1]].position = Position(string_arr[2], string_arr[3],
                                                                       string_arr[4], string_arr[5])
 

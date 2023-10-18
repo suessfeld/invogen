@@ -1,4 +1,5 @@
 import time
+import datetime
 
 
 class Position:
@@ -25,5 +26,7 @@ class Annotation:
     data: dict[DataObject]
 
     def __init__(self):
-        self.meta = {'timestamp': time.time(), 'version': '0.01', 'image_size': 'implement me!'}
+        self.meta = {'timestamp': datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                     'version': '0.01',
+                     'image_size': 'implement me!'}
         self.data = {}

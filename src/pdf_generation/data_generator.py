@@ -6,6 +6,7 @@ import requests
 from faker import Faker
 
 import pdf_generation
+from pdf_generation.Address import Address
 from util.constants import LOGO_API_KEY
 
 
@@ -35,7 +36,11 @@ class DataGenerator:
                 return f"{calendar.month_abbr[date.month]} {date.day}, {date.year}"
 
     def address(self):
-        return self.fake.address()
+        return Address(self.fake.street_name(),
+                       self.fake.building_number(),
+                       self.fake.city(),
+                       self.fake.postcode(),
+                       self.fake.country())
 
     def company_name(self):
         return self.fake.company()
