@@ -37,7 +37,7 @@ def fill_html(html, annotation_object: Annotation):
                     elem['src'] = provided_types[data_type]()
                     elem['style'] = f'height:{random.randint(80, 140)}px'
 
-                if data_type == 'address':
+                elif data_type == 'address':
                     address = provided_types[data_type]()
 
                     street_div = soup.new_tag("div")
@@ -63,13 +63,10 @@ def fill_html(html, annotation_object: Annotation):
                     output = provided_types[data_type]()
                     elem.string = output
 
-                    # annotation_object.data[elem['id']].value = output
-                    # annotation_object.data[elem['id']].type = data_type
-
             except KeyError:
                 print(f'Data type {elem.attrs["data-type"]} is unknown! This field will not be filled.')
 
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'w') as f:
+    with open(DEFAULT_TMP_PATH + 'invoice.html', 'w', encoding="utf-8") as f:
         f.write(str(soup))
 
 

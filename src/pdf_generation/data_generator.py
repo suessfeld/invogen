@@ -2,6 +2,7 @@ import calendar
 import random
 import string
 import requests
+import rstr
 
 from faker import Faker
 
@@ -18,7 +19,7 @@ class DataGenerator:
         return self.first_name + " " + self.last_name
 
     def invoice_no(self):
-        return "00-000000"
+        return rstr.xeger(r'[0-9]{3,5}[\/\\|\-.][0-9]{3,5}')
 
     def date(self):
         date = self.fake.date_this_century()

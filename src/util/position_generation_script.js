@@ -1,6 +1,5 @@
 window.addEventListener('load', function () {
         var all = document.getElementsByTagName('*')
-        var testdiv = document.getElementById("testdiv")
 
         for (var i = 0; i < all.length; i++) {
             var elem = all[i];
@@ -17,7 +16,12 @@ window.addEventListener('load', function () {
                 elem.style.left = left + "px";
                 elem.style.bottom = bottom + "px";
 
-                console.log("position-absolute;" + elem.id + ";" + left + ";" + bottom + ";" + (left + elem.scrollWidth) + ";" + (bottom + elem.scrollHeight));
+            }
+            if (elem.hasAttribute("id") &&
+                !(elem.hasAttribute("data-type") && elem.getAttribute("data-type") === "address")) {
+                console.log("position-absolute;" + elem.id + ";" + left + ";" + bottom + ";"
+                    + (left + elem.scrollWidth) + ";" + (bottom + elem.scrollHeight) + ";"
+                    + elem.innerHTML + ";");
             }
         }
 

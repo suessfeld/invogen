@@ -1,7 +1,8 @@
 import io
 import os
 import re
-
+import codecs
+import sys
 from contextlib import redirect_stdout
 
 import pdfkit
@@ -24,7 +25,6 @@ The output name is specified in constants.py.
 def generate_pdfs(gen_attr: GenerationAttributes):
     invoice_output_path = gen_attr.invoice_output_path
     annotation_output_path = gen_attr.annotation_output_path
-
 
     if not os.path.exists(gen_attr.invoice_output_path):
         os.mkdir(gen_attr.invoice_output_path)
@@ -74,9 +74,12 @@ def render(gen_attr: GenerationAttributes):
     with open(template_path) as html_file:
 
         with io.StringIO() as buf, redirect_stdout(buf):
-            pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config, options={"enable-local-file-access": ""}, css="./sample_invoice/invoice.css", verbose=True)
-            extract_and_save_position(buf, gen_attr.annotation_output_path, annotation_object)
-        return pdf
+            pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
+                                         options={"enable-local-file-access": ""}, css="./sample_invoice/invoice.css",
+                                         verbose=True)
+            extract_and_save_information(buf, gen_attr.annotation_output_path, annotation_object)
+            return pdf
+
 
 
 """
@@ -85,17 +88,20 @@ TODO: Implement
 """
 
 
-def extract_and_save_position(buf, annotation_output_path, annotation_object):
-    with open(annotation_output_path, "a+") as file:
+def extract_and_save_information(buf, annotation_output_path, annotation_object):
+    with codecs.open(annotation_output_path, "w", encoding="utf-8") as file:
         string = buf.getvalue()
-        matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;[0-9]+;[0-9]+", string)
+        matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;[0-9]+;[0-9]+;.+;", string)
 
         for m in matches:
             string_arr = m.split(';')
             annotation_object.data[string_arr[1]] = DataObject()
             annotation_object.data[string_arr[1]].position = Position(string_arr[2], string_arr[3],
                                                                       string_arr[4], string_arr[5])
+            annotation_object.data[string_arr[1]].value = string_arr[6]
 
+        # Ensure correct utf-8 encoding
+        jsonpickle.set_encoder_options('json', ensure_ascii=False)
         file.write(jsonpickle.encode(annotation_object, unpicklable=False, max_depth=10))
 
 
@@ -137,18 +143,3 @@ def generate_bounding_boxes(html):
 
     with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+') as f:
         f.write(str(output))
-
-
-"""
-TODO:implement
-Generates a random context.
-"""
-
-
-def generate_context() -> {}:
-    pass
-
-
-
-class Context:
-    pass
