@@ -53,8 +53,8 @@ def render(gen_attr: GenerationAttributes):
     if os.path.exists(DEFAULT_TMP_PATH + "invoice.html"):
         os.remove(DEFAULT_TMP_PATH + "invoice.html")
 
-    template_path = './sample_invoice/invoice.html'
-    template_css = './sample_invoice/invoice.css'
+    template_path = './sample_invoice/invoice_example1.html'
+    template_css = './sample_invoice/invoice_example1.css'
 
     annotation_object = Annotation()
 

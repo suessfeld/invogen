@@ -1,3 +1,4 @@
+import json
 import random
 import string
 
@@ -39,7 +40,7 @@ def fill_html(html, annotation_object: Annotation):
 
                 if data_type == 'logo':
                     elem['src'] = provided_types[data_type]()
-                    elem['style'] = f'height:{random.randint(80, 140)}px'
+                    elem['style'] = f'height:{random.randint(20, 60)}px'
 
                 elif data_type == 'custom':
                     elem.string = provided_types[data_type](elem['data-list'])
@@ -71,7 +72,9 @@ def fill_html(html, annotation_object: Annotation):
 
                     assert (elem.name == "table")
 
-                    items = provided_types[data_type](5, 10)
+                    config = json.loads(elem['data-config'])
+
+                    items = provided_types[data_type](config['minElems'], config['maxElems'])
 
                     first_row = soup.new_tag("tr")
                     first_row.append(create_tag(soup, "th", f'{str(elem["id"])}_header_name', 'Product'))
@@ -97,7 +100,7 @@ def fill_html(html, annotation_object: Annotation):
                     elem.append(last_row)
 
                     with open(DEFAULT_TMP_PATH + 'invoice.css', 'a') as f:
-                        f.write(generate_table_styles(elem))
+                        f.write(generate_table_styles(elem, config))
 
                 else:
                     output = provided_types[data_type]()
@@ -121,13 +124,11 @@ def create_tag(soup, tag, tag_id, content):
         return new_tag
 
 
-def generate_table_styles(table):
-    return f'#{table["id"]} {{ width: {random.randint(800, 1500)}px;' \
-           f'border: {[0, 1][random.randint(0, 7) == 0]};' \
-           f'padding: {random.randint(10, 50)}px;' \
-           f'border-spacing: {random.randint(10, 50)}px;' \
-           f'font-size: {random.randint(10, 50)}px;' \
-           f'text-align: {["left", "right"][random.randint(0, 1) == 0]};' \
+def generate_table_styles(table, config):
+    return f'#{table["id"]} {{ width: {config["width"]}px;' \
+           f'border-spacing: {random.randint(config["minBorderSpacing"], config["maxBorderSpacing"])}px;' \
+           f'font-size: {random.randint(config["minFontSize"], config["maxFontSize"])}px;' \
+           f'text-align: right;' \
            f'box-sizing: border-box;' \
            f'table-layout: fixed;}}'
 
