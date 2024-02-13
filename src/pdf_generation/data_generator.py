@@ -1,12 +1,16 @@
 import calendar
 import random
 import string
+
+import faker
 import requests
 import rstr
 
+import faker_commerce
 from faker import Faker
 
 import pdf_generation
+from pdf_generation.Item import Item
 from pdf_generation.Address import Address
 from util.constants import LOGO_API_KEY
 
@@ -62,10 +66,38 @@ class DataGenerator:
         else:
             print("Error:", response.status_code, response.text)
 
+    def item_list(self, lower_bound, upper_bound):
+
+        item_list = []
+        currency = random.choice(['$', ' $ ', '€', ' € ', '£', ' £ '])
+        currency_in_front = random.randint(0, 1) == 0
+        total = 0
+
+        for _ in range(random.randint(lower_bound, upper_bound)):
+            item_name = self.fake.ecommerce_name()
+
+            item_price_float = float("{0:.2f}".format(random.uniform(2, 600)))
+            item_price = [f'{currency}{item_price_float}', f'{item_price_float}{currency}'][currency_in_front]
+            total = total + item_price_float
+
+            item_quantity = random.randint(1, 4)
+            item = Item(item_name, item_price, item_quantity)
+            item_list.append(item)
+
+        total = "{:.2f}".format(total)
+        item_list.append(Item('total', [f'{currency}{total}', f'{total}{currency}'][currency_in_front], 0))
+        return item_list
+
+    def custom(self, data: str):
+        strings = data.split(';')
+        choice = random.choice(strings)
+        return choice
+
     def __init__(self):
         # TODO: Maybe change functionality, so functions will be extracted automatically
 
         self.fake = Faker('de_DE')
+        self.fake.add_provider(faker_commerce.Provider)
         self.first_name = self.fake.first_name()
         self.last_name = self.fake.last_name()
 
@@ -76,4 +108,6 @@ class DataGenerator:
             'date': self.date,
             'email': self.email,
             'company': self.company_name,
-            'client_name': self.client_name}
+            'client_name': self.client_name,
+            'item_list': self.item_list,
+            'custom': self.custom}

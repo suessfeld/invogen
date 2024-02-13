@@ -1,4 +1,5 @@
 import random
+import string
 
 from bs4 import BeautifulSoup
 
@@ -28,6 +29,9 @@ def fill_html(html, annotation_object: Annotation):
     soup = BeautifulSoup(html, 'html.parser')
     elems = soup.findAll()
 
+    # fonts:
+    set_font(soup)
+
     for elem in elems:
         if 'data-type' in elem.attrs:
             data_type = elem.attrs['data-type']
@@ -37,12 +41,16 @@ def fill_html(html, annotation_object: Annotation):
                     elem['src'] = provided_types[data_type]()
                     elem['style'] = f'height:{random.randint(80, 140)}px'
 
+                elif data_type == 'custom':
+                    elem.string = provided_types[data_type](elem['data-list'])
+
                 elif data_type == 'address':
                     address = provided_types[data_type]()
 
                     street_div = soup.new_tag("div")
                     street_span = create_tag(soup, "span", str(elem["id"]) + "_street", address.street)
-                    number_span = create_tag(soup, "span", str(elem["id"]) + "_building_number", address.building_number)
+                    number_span = create_tag(soup, "span", str(elem["id"]) + "_building_number",
+                                             address.building_number)
                     street_div.append(street_span)
                     street_div.append(" ")
                     street_div.append(number_span)
@@ -59,6 +67,38 @@ def fill_html(html, annotation_object: Annotation):
                     elem.append(city_div)
                     elem.append(country_div)
 
+                elif data_type == 'item_list':
+
+                    assert (elem.name == "table")
+
+                    items = provided_types[data_type](5, 10)
+
+                    first_row = soup.new_tag("tr")
+                    first_row.append(create_tag(soup, "th", f'{str(elem["id"])}_header_name', 'Product'))
+                    first_row.append(create_tag(soup, "th", f'{str(elem["id"])}_header_quantity', 'Quantity'))
+                    first_row.append(create_tag(soup, "th", f'{str(elem["id"])}_header_price', 'Price'))
+                    elem.append(first_row)
+
+                    count = 1
+                    for item in items[:-1]:
+                        row = soup.new_tag("tr")
+                        row.append(create_tag(soup, "td", f'{str(elem["id"])}_item_{count}_name', item.name))
+                        row.append(
+                            create_tag(soup, "td", f'{str(elem["id"])}_item_{count}_quantity', str(item.quantity)))
+                        row.append(create_tag(soup, "td", f'{str(elem["id"])}_item_{count}_price', str(item.price)))
+                        elem.append(row)
+                        count += 1
+
+                    last_row = soup.new_tag("tr")
+                    last_row.append(soup.new_tag("th"))
+                    last_row.append(create_tag(soup, "th", None, random.choice(
+                        ["Total", "Total: ", "TOTAL", "TOTAL:", "Sum", "Sum:", "SUM", "SUM:"])))
+                    last_row.append(create_tag(soup, "th", f'{str(elem["id"])}_total', items[len(items) - 1].price))
+                    elem.append(last_row)
+
+                    with open(DEFAULT_TMP_PATH + 'invoice.css', 'a') as f:
+                        f.write(generate_table_styles(elem))
+
                 else:
                     output = provided_types[data_type]()
                     elem.string = output
@@ -66,14 +106,53 @@ def fill_html(html, annotation_object: Annotation):
             except KeyError:
                 print(f'Data type {elem.attrs["data-type"]} is unknown! This field will not be filled.')
 
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'w', encoding="utf-8") as f:
+    with open(DEFAULT_TMP_PATH + 'invoice.html', 'w') as f:
         f.write(str(soup))
 
 
 def create_tag(soup, tag, tag_id, content):
-    new_tag = soup.new_tag(tag, id=tag_id)
-    new_tag.string = content
-    return new_tag
+    if tag_id is None:
+        new_tag = soup.new_tag(tag)
+        new_tag.string = content
+        return new_tag
+    else:
+        new_tag = soup.new_tag(tag, id=tag_id)
+        new_tag.string = content
+        return new_tag
+
+
+def generate_table_styles(table):
+    return f'#{table["id"]} {{ width: {random.randint(800, 1500)}px;' \
+           f'border: {[0, 1][random.randint(0, 7) == 0]};' \
+           f'padding: {random.randint(10, 50)}px;' \
+           f'border-spacing: {random.randint(10, 50)}px;' \
+           f'font-size: {random.randint(10, 50)}px;' \
+           f'text-align: {["left", "right"][random.randint(0, 1) == 0]};' \
+           f'box-sizing: border-box;' \
+           f'table-layout: fixed;}}'
+
+
+def set_font(soup):
+    elem = soup.findAll("html")[0]
+    font_choice = '"Courier New", Courier, monospace;'
+    size_choice = 30
+    if 'data-fonts' in elem.attrs:
+        data_fonts = elem.attrs['data-fonts']
+        fonts = data_fonts.split(';')
+        font_choice = random.choice(fonts)
+
+    if 'data-fontsize' in elem.attrs:
+        data_fontsize = elem.attrs['data-fontsize']
+        limits = data_fontsize.split(';')
+        size_choice = random.randint(int(limits[0]), int(limits[1]))
+
+    with open(DEFAULT_TMP_PATH + 'invoice.css', 'a') as f:
+
+        f.write('\nhtml {'
+                f'font-family: {font_choice};\n'
+                f'font-size: {size_choice}px\n'
+                '}')
+
 
 class HTMLFileFormatError(Exception):
     def __init__(self, message):

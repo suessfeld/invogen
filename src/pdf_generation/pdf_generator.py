@@ -54,8 +54,14 @@ def render(gen_attr: GenerationAttributes):
         os.remove(DEFAULT_TMP_PATH + "invoice.html")
 
     template_path = './sample_invoice/invoice.html'
+    template_css = './sample_invoice/invoice.css'
 
     annotation_object = Annotation()
+
+    # TODO: Change input
+    with open(DEFAULT_TMP_PATH + 'invoice.css', 'w') as css_file, open(template_css, 'r') as input_file:
+        for line in input_file:
+            css_file.write(line)
 
     with open(template_path) as html_file:
         html_parser.fill_html(html_file, annotation_object)
@@ -73,11 +79,11 @@ def render(gen_attr: GenerationAttributes):
 
     with open(template_path) as html_file:
 
-        with io.StringIO() as buf, redirect_stdout(buf):
+        #with io.StringIO() as buf:
             pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
-                                         options={"enable-local-file-access": ""}, css="./sample_invoice/invoice.css",
+                                         options={"enable-local-file-access": ""}, css=DEFAULT_TMP_PATH + "invoice.css",
                                          verbose=True)
-            extract_and_save_information(buf, gen_attr.annotation_output_path, annotation_object)
+            #extract_and_save_information(buf, gen_attr.annotation_output_path, annotation_object)
             return pdf
 
 
@@ -90,7 +96,8 @@ TODO: Implement
 
 def extract_and_save_information(buf, annotation_output_path, annotation_object):
     with codecs.open(annotation_output_path, "w", encoding="utf-8") as file:
-        string = buf.getvalue()
+        string = buf.getvalue().encode("utf-8")
+        string = string.decode("utf-8")
         matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;[0-9]+;[0-9]+;.+;", string)
 
         for m in matches:
@@ -122,7 +129,6 @@ def add_js_to_html():
 """
 Generates visual bounding boxes for all randomly placed Elements.
 """
-
 
 def generate_bounding_boxes(html):
     soup = BeautifulSoup(html, 'html.parser')
