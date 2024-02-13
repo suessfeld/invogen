@@ -1,3 +1,5 @@
+import logging
+
 import typer
 from typing import Optional
 
@@ -6,6 +8,8 @@ import pdf_generation
 from util.constants import *
 
 app = typer.Typer(help="Invoice Generation Tool by Elias Voill")
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
 """
 Generates invoices with the specified params.
@@ -26,26 +30,6 @@ def generate(invoice_output_path: Optional[str] = None, annotation_output_path: 
     gen_attr.amount = amount
 
     pdf_generation.generate_pdfs(gen_attr)
-
-
-"""
-Validates a html-input file
-"""
-@app.command()
-def validate(path: str = None):
-
-    if path:
-        try:
-            pdf_generation.validate_html(path)
-
-        except FileNotFoundError:
-            print(f"File not found: {path}")
-            return None
-
-        except pdf_generation.HTMLFileFormatError as e:
-            print(f"Config is not in the right format: {e}")
-            return None
-
 
 if __name__ == "__main__":
     app()

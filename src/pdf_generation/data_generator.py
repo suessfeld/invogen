@@ -1,4 +1,5 @@
 import calendar
+import logging
 import random
 import string
 
@@ -12,10 +13,16 @@ from faker import Faker
 import pdf_generation
 from pdf_generation.Item import Item
 from pdf_generation.Address import Address
-from util.constants import LOGO_API_KEY
+from util.constants import LOGO_API_KEY, LOGO_API_URL
 
 
 class DataGenerator:
+
+    # singleton instance
+    _instance = None
+
+    _buffered_images = []
+
     def email(self):
         return f"{self.first_name}.{self.last_name}@{self.fake.domain_name()}"
 
@@ -51,20 +58,28 @@ class DataGenerator:
         return self.fake.company()
 
     def logo(self):
+
+        if self._buffered_images:
+            img = random.choice(self._buffered_images)
+            self._buffered_images.remove(img)
+            return img["image"]
+
         name = ''.join(random.choice(string.ascii_lowercase) for _ in range(2))
-        api_url = 'https://api.api-ninjas.com/v1/logo?name={}'.format(name)
+        api_url = f'{LOGO_API_URL}?name={name}'
         response = requests.get(api_url, headers={'X-Api-Key': LOGO_API_KEY})
 
+        logging.info("Sent API-request for logo fetching")
         if response.status_code == requests.codes.ok:
             json = response.json()
 
             if len(json) == 0:
                 return self.logo()
 
-            return json[0]["image"]
+            self._buffered_images = json
+            return self.logo()
 
         else:
-            print("Error:", response.status_code, response.text)
+            logging.error("Error:", response.status_code, response.text)
 
     def item_list(self, lower_bound, upper_bound):
 
@@ -94,13 +109,10 @@ class DataGenerator:
         return choice
 
     def __init__(self):
-        # TODO: Maybe change functionality, so functions will be extracted automatically
-
         self.fake = Faker('de_DE')
         self.fake.add_provider(faker_commerce.Provider)
         self.first_name = self.fake.first_name()
         self.last_name = self.fake.last_name()
-
         self.data_types = {
             'logo': self.logo,
             'invoice_no': self.invoice_no,
@@ -111,3 +123,8 @@ class DataGenerator:
             'client_name': self.client_name,
             'item_list': self.item_list,
             'custom': self.custom}
+
+    def __new__(cls, *args, **kwargs):
+        if not cls._instance:
+            cls._instance = super(DataGenerator, cls).__new__(cls, *args, **kwargs)
+        return cls._instance

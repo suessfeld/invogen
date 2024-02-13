@@ -1,4 +1,5 @@
 import json
+import logging
 import random
 import string
 
@@ -8,23 +9,7 @@ from pdf_generation import DataGenerator
 from pdf_generation.Annotation import Annotation, DataObject
 from util.constants import *
 
-"""
-Validates a custom config file. 
-TODO: add functionality
-"""
-
-
-def validate_html(html):
-    pass
-    # TODO: implement
-
-
-def parse_html(html):
-    pass
-
-
-# TODO: Implement information extraction for annotation.
-def fill_html(html, annotation_object: Annotation):
+def fill_html(html):
     data_generator = DataGenerator()
     provided_types = data_generator.data_types
     soup = BeautifulSoup(html, 'html.parser')
@@ -74,6 +59,15 @@ def fill_html(html, annotation_object: Annotation):
 
                     config = json.loads(elem['data-config'])
 
+                    # validate options
+                    viable_options = {'width', 'minBorderSpacing', 'maxBorderSpacing', 'minFontSize', 'maxFontSize',
+                                      'minElems', 'maxElems'}
+                    config_keys = set(config.keys())
+                    extra_keys = config_keys - viable_options
+                    if extra_keys:
+                        logging.error(f"Table has invalid options: {extra_keys}")
+                        continue
+
                     items = provided_types[data_type](config['minElems'], config['maxElems'])
 
                     first_row = soup.new_tag("tr")
@@ -99,7 +93,7 @@ def fill_html(html, annotation_object: Annotation):
                     last_row.append(create_tag(soup, "th", f'{str(elem["id"])}_total', items[len(items) - 1].price))
                     elem.append(last_row)
 
-                    with open(DEFAULT_TMP_PATH + 'invoice.css', 'a') as f:
+                    with open(DEFAULT_TMP_PATH + 'invoice.css', 'a', encoding="utf-8") as f:
                         f.write(generate_table_styles(elem, config))
 
                 else:
@@ -107,9 +101,9 @@ def fill_html(html, annotation_object: Annotation):
                     elem.string = output
 
             except KeyError:
-                print(f'Data type {elem.attrs["data-type"]} is unknown! This field will not be filled.')
+                logging.error(f'Data type {elem.attrs["data-type"]} is unknown! This field will not be filled.')
 
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'w') as f:
+    with open(DEFAULT_TMP_PATH + 'invoice.html', 'w', encoding="utf-8") as f:
         f.write(str(soup))
 
 
@@ -147,7 +141,7 @@ def set_font(soup):
         limits = data_fontsize.split(';')
         size_choice = random.randint(int(limits[0]), int(limits[1]))
 
-    with open(DEFAULT_TMP_PATH + 'invoice.css', 'a') as f:
+    with open(DEFAULT_TMP_PATH + 'invoice.css', 'a', encoding="utf-8") as f:
 
         f.write('\nhtml {'
                 f'font-family: {font_choice};\n'

@@ -1,4 +1,5 @@
 import io
+import logging
 import os
 import re
 import codecs
@@ -33,17 +34,19 @@ def generate_pdfs(gen_attr: GenerationAttributes):
         os.mkdir(gen_attr.annotation_output_path)
 
     for i in range(gen_attr.amount):
+        start = time.time()
         gen_attr.invoice_output_path = invoice_output_path
         gen_attr.invoice_output_path = invoice_output_path + DEFAULT_OUTPUT_NAME + str(i) + ".pdf"
 
         gen_attr.annotation_output_path = annotation_output_path
         gen_attr.annotation_output_path = annotation_output_path + DEFAULT_OUTPUT_NAME + str(i) + ".json"
         render(gen_attr)
+        end = time.time()
+        logging.info(f'Generated {gen_attr.invoice_output_path} in {round(end - start, 2)} seconds')
 
 
 """
 Renders a single PDF document from html and css templates. 
-TODO: complete functionality with config and random values.
 """
 
 
@@ -59,45 +62,41 @@ def render(gen_attr: GenerationAttributes):
     annotation_object = Annotation()
 
     # TODO: Change input
-    with open(DEFAULT_TMP_PATH + 'invoice.css', 'w') as css_file, open(template_css, 'r') as input_file:
+    with open(DEFAULT_TMP_PATH + 'invoice.css', 'w', encoding="utf-8") as css_file, open(template_css, 'r') as input_file:
         for line in input_file:
             css_file.write(line)
 
-    with open(template_path) as html_file:
-        html_parser.fill_html(html_file, annotation_object)
+    with open(template_path, encoding="utf-8") as html_file:
+        html_parser.fill_html(html_file)
 
     if gen_attr.display_bounding_boxes:
-        with open(template_path) as html_file:
+        with open(template_path, encoding="utf-8") as html_file:
             generate_bounding_boxes(html_file)
         gen_attr.display_bounding_boxes = False
 
-    # TODO: This should be refactored
     add_js_to_html()
 
     template_path = DEFAULT_TMP_PATH + 'invoice.html'
     config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
 
-    with open(template_path) as html_file:
+    with open(template_path, encoding="utf-8") as html_file:
 
-        #with io.StringIO() as buf:
+        with io.StringIO() as buf, redirect_stdout(buf):
             pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
-                                         options={"enable-local-file-access": ""}, css=DEFAULT_TMP_PATH + "invoice.css",
-                                         verbose=True)
-            #extract_and_save_information(buf, gen_attr.annotation_output_path, annotation_object)
-            return pdf
-
+                                     options={"enable-local-file-access": ""}, css=DEFAULT_TMP_PATH + "invoice.css",
+                                     verbose=True)
+            extract_and_save_information(buf, gen_attr.annotation_output_path, annotation_object)
+        return pdf
 
 
 """
 Extracts position information from the html file
-TODO: Implement
 """
 
 
 def extract_and_save_information(buf, annotation_output_path, annotation_object):
     with codecs.open(annotation_output_path, "w", encoding="utf-8") as file:
-        string = buf.getvalue().encode("utf-8")
-        string = string.decode("utf-8")
+        string = buf.getvalue()
         matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;[0-9]+;[0-9]+;.+;", string)
 
         for m in matches:
@@ -118,17 +117,18 @@ Reads in the JS-Script file and appends the script to the html file.
 
 
 def add_js_to_html():
-    with open(DEFAULT_GENERATION_SCRIPT_PATH) as script:
+    with open(DEFAULT_GENERATION_SCRIPT_PATH, encoding='utf-8') as script:
         soup = BeautifulSoup()
         soup.append(BeautifulSoup("<script>" + script.read() + "</script>", features="html.parser"))
 
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+') as f:
+    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+', encoding="utf-8") as f:
         f.write(str(soup))
 
 
 """
 Generates visual bounding boxes for all randomly placed Elements.
 """
+
 
 def generate_bounding_boxes(html):
     soup = BeautifulSoup(html, 'html.parser')
@@ -147,5 +147,5 @@ def generate_bounding_boxes(html):
             """)
             output.append(tag)
 
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+') as f:
+    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+', encoding="utf-8") as f:
         f.write(str(output))

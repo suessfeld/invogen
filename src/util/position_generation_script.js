@@ -19,9 +19,8 @@ window.addEventListener('load', function () {
 
         }
         if (elem.hasAttribute("id") &&
-            (!elem.hasAttribute("data-type") &&
-                !elem.getAttribute("data-type") === "address" &&
-                !elem.getAttribute("data-type") === "item_list")) {
+            (elem.getAttribute("data-type") !== "address" &&
+                elem.getAttribute("data-type") !== "item_list")) {
             console.log("position-absolute;" + elem.id + ";" + left + ";" + bottom + ";"
                 + (left + elem.scrollWidth) + ";" + (bottom + elem.scrollHeight) + ";"
                 + elem.innerHTML + ";");
