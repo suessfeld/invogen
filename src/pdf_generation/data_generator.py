@@ -109,7 +109,7 @@ class DataGenerator:
         return choice
 
     def __init__(self):
-        self.fake = Faker('de_DE')
+        self.fake = Faker('en_US')
         self.fake.add_provider(faker_commerce.Provider)
         self.first_name = self.fake.first_name()
         self.last_name = self.fake.last_name()

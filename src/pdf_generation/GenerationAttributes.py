@@ -5,6 +5,7 @@ class GenerationAttributes:
     amount: int
     invoice_output_path: str
     annotation_output_path: str
+    temp_path: str
     display_bounding_boxes: bool
 
 class BoundingBox:

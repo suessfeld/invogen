@@ -26,12 +26,16 @@ The output name is specified in constants.py.
 def generate_pdfs(gen_attr: GenerationAttributes):
     invoice_output_path = gen_attr.invoice_output_path
     annotation_output_path = gen_attr.annotation_output_path
+    temp_path = gen_attr.temp_path
 
-    if not os.path.exists(gen_attr.invoice_output_path):
-        os.mkdir(gen_attr.invoice_output_path)
+    if not os.path.exists(invoice_output_path):
+        os.mkdir(invoice_output_path)
 
-    if not os.path.exists(gen_attr.annotation_output_path):
-        os.mkdir(gen_attr.annotation_output_path)
+    if not os.path.exists(annotation_output_path):
+        os.mkdir(annotation_output_path)
+
+    if not os.path.exists(temp_path):
+        os.mkdir(temp_path)
 
     for i in range(gen_attr.amount):
         start = time.time()
@@ -56,8 +60,8 @@ def render(gen_attr: GenerationAttributes):
     if os.path.exists(DEFAULT_TMP_PATH + "invoice.html"):
         os.remove(DEFAULT_TMP_PATH + "invoice.html")
 
-    template_path = './sample_invoice/invoice_example1.html'
-    template_css = './sample_invoice/invoice_example1.css'
+    template_path = '../sample_invoice/invoice_example1.html'
+    template_css = '../sample_invoice/invoice_example1.css'
 
     annotation_object = Annotation()
 
