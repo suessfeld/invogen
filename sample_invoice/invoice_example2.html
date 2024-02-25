@@ -1,0 +1,76 @@
+<html data-fonts="preconnect;Oswald;Syne Mono, monospace;Roboto Condensed" data-fontsize="40;50"
+      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#EDEADE;#F9F6EE;#FAF9F6">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<head>
+    <meta charset="UTF-8">
+    <meta name="pdfkit-page-height" content="3508px"/>
+    <meta name="pdfkit-page-width" content="2480px"/>
+    <meta name="pdfkit-margin-top" content="0px"/>
+    <meta name="pdfkit-margin-right" content="0px"/>
+    <meta name="pdfkit-margin-left" content="0px"/>
+    <meta name="pdfkit-margin-bottom" content="0px"/>
+    <meta name="pdfkit-disable-smart-shrinking" content=""/>
+    <meta name="pdfkit-debug-javascript" content=""/>
+</head>
+
+<img id="logo" data-position="1500 3200 2395 3423" data-type="logo" data-config='
+{
+    "height": "100;200"
+}
+'>
+<h1 id="header" data-position="900 3000 1438 3100" data-type="custom" data-list="
+Invoice;Receipt;INVOICE; I n v o i c e; "></h1>
+
+<table data-position="200 2500 1220 2950">
+    <tr>
+        <td><strong>BILLED TO</strong></td>
+    </tr>
+    <tr>
+        <td><span id="billed_to_name" data-type="company"></span></td>
+    </tr>
+    <tr>
+        <td><span id="billed_to_address" data-type="address"></span></td>
+    </tr>
+    <tr>
+        <td>Pay Due: <strong id="billed_to_date" data-type="date"></strong></td>
+    </tr>
+</table>
+
+<table data-position="1260 2500 2277 2950">
+    <tr>
+        <td><strong>BILLED BY</strong></td>
+    </tr>
+    <tr>
+        <td><span id="billed_by_name" data-type="company"></span></td>
+    </tr>
+    <tr>
+        <td><span id="billed_by_address" data-type="address"></span></td>
+    </tr>
+    <tr>
+        <td>Invoice Date: <strong id="billed_by_date" data-type="date"></strong></td>
+    </tr>
+    <tr>
+        <td>Invoice No.: <strong id="invoice_number" data-type="regex"
+                                 data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{3,5}"></strong></td>
+    </tr>
+</table>
+
+<table id="item_list" data-type="item_list" data-position="100 600 2100 2400" data-config='
+{
+    "minWidth": 1500,
+    "maxWidth": 2000,
+    "minElems": 10,
+    "maxElems": 14,
+    "minFontSize": 40,
+    "maxFontSize": 60,
+    "minPadding": 10,
+    "maxPadding": 25,
+    "colors": "#d3d3d3;#FFD5D5;#FFFFFF"
+}
+'></table>
+
+<div data-position="300 200 2180 400" data-type="custom" data-list="
+Thanks for making business with us!;Thank you!;If you have any questions please contact us!;For inquiries contact us.;Payment is required within 14 business days;Payment is due within 10 days
+"></div>
+</html>

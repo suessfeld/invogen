@@ -1,4 +1,5 @@
-<html data-fonts="MODERN TYPEWRITER;Cutive Mono;Syne Mono" data-fontsize="20;30">
+<html data-fonts="MODERN TYPEWRITER;Cutive Mono;Syne Mono" data-fontsize="40;50"
+      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#EDEADE;#F9F6EE;#FAF9F6">
 <link href="https://fonts.cdnfonts.com/css/modern-typewriter" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Syne+Mono&display=swap" rel="stylesheet">
@@ -14,34 +15,40 @@
     <meta name="pdfkit-debug-javascript" content=""/>
 </head>
 
-<img id="logo" data-position="700 2300 790 2400" data-type="logo">
+<img id="logo" data-position="700 2300 790 2400" data-type="logo" data-config='
+{
+    "height": "30;50"
+}
+'>
 <h1 id="header" data-position="250 2250 550 2300" data-type="custom" data-list="
-Invoice;Receipt;
-"></h1>
+Invoice;Receipt; "></h1>
 <div id="line_top" data-position="0 2200 800 2250" data-type="custom" data-list="
 -----------------------------------------------------------------------;
 "></div>
 <table data-position="50 2150 750 2200">
     <tr>
         <td>Date: <strong id="date" data-type="date"></strong></td>
-        <td>Nr: <strong id="invoice_number" data-type="invoice_no"></strong></td>
+        <td>Nr: <strong id="invoice_number" data-type="regex" data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{3,5}"></strong></td>
     </tr>
 </table>
 <table id="item_list" data-type="item_list" data-position="50 600 750 2150" data-config='
 {
-    "width": 650,
-    "minElems": 25,
-    "maxElems": 30,
+    "minWidth": 600,
+    "maxWidth": 700,
+    "minElems": 15,
+    "maxElems": 25,
     "minFontSize": 15,
     "maxFontSize": 20,
-    "minBorderSpacing": 20,
-    "maxBorderSpacing": 30
+    "minPadding": 5,
+    "maxPadding": 10,
+    "colors": "#d3d3d3;#FFD5D5;#FFFFFF"
 }
 '></table>
 <div>
 
 </div>
-<img id="qr-code" data-position="300 400 500 600" src="https://upload.wikimedia.org/wikipedia/commons/0/0b/QR_code_Wikimedia_Commons_%28URL%29.png">
+<img id="qr-code" data-position="300 400 500 600"
+     src="https://upload.wikimedia.org/wikipedia/commons/0/0b/QR_code_Wikimedia_Commons_%28URL%29.png">
 <div id="line_bottom" data-position="0 350 800 400" data-type="custom" data-list="
 -----------------------------------------------------------------------;
 "></div>

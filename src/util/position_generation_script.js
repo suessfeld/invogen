@@ -1,4 +1,4 @@
-window.addEventListener('load', function () {
+window.addEventListener('DOMContentLoaded', function () {
     var all = document.getElementsByTagName('*')
 
     for (var i = 0; i < all.length; i++) {
@@ -21,8 +21,13 @@ window.addEventListener('load', function () {
         if (elem.hasAttribute("id") &&
             (elem.getAttribute("data-type") !== "address" &&
                 elem.getAttribute("data-type") !== "item_list")) {
-            console.log("position-absolute;" + elem.id + ";" + left + ";" + bottom + ";"
-                + (left + elem.scrollWidth) + ";" + (bottom + elem.scrollHeight) + ";"
+
+            var x1 = elem.style.left
+            var y1 = elem.style.bottom
+            var x2 = x1 + elem.clientWidth
+            var y2 = y1 + elem.clientHeight
+
+            console.log("position-absolute;" + elem.id + ";" + x1 + ";" + y2 + ";" + x2 + ";" + y2 + ";"
                 + elem.innerHTML + ";");
         }
     }

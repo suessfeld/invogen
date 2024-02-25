@@ -1,4 +1,5 @@
 import calendar
+import inspect
 import logging
 import random
 import string
@@ -21,6 +22,8 @@ class DataGenerator:
     # singleton instance
     _instance = None
 
+    _buffer_logos = False
+
     _buffered_images = []
 
     def email(self):
@@ -29,8 +32,8 @@ class DataGenerator:
     def client_name(self):
         return self.first_name + " " + self.last_name
 
-    def invoice_no(self):
-        return rstr.xeger(r'[0-9]{3,5}[\/\\|\-.][0-9]{3,5}')
+    def regex(self, regex):
+        return rstr.xeger(regex)
 
     def date(self):
         date = self.fake.date_this_century()
@@ -39,7 +42,7 @@ class DataGenerator:
             case 0:
                 return f"{date.day}.{date.month}.{date.year}"
             case 1:
-                return f"{date.day}/{date.month}/{date.year}"
+                return f"{date.day}/{date.month}/{str(date.year)[len(str(date.year)) - 2:]}"
             case 2:
                 return f"{date.year}-{date.month}-{date.day}"
             case 3:
@@ -54,10 +57,24 @@ class DataGenerator:
                        self.fake.postcode(),
                        self.fake.country())
 
-    def company_name(self):
+    def company(self):
         return self.fake.company()
 
     def logo(self):
+
+        if not self._buffer_logos:
+            logging.info("Sent API-request for logo fetching")
+            name = ''.join(random.choice(string.ascii_lowercase) for _ in range(2))
+            api_url = 'https://api.api-ninjas.com/v1/logo?name={}'.format(name)
+            response = requests.get(api_url, headers={'X-Api-Key': LOGO_API_KEY})
+
+            if response.status_code == requests.codes.ok:
+                json = response.json()
+
+                if len(json) == 0:
+                    return self.logo()
+
+                return json[0]["image"]
 
         if self._buffered_images:
             img = random.choice(self._buffered_images)
@@ -108,23 +125,20 @@ class DataGenerator:
         choice = random.choice(strings)
         return choice
 
-    def __init__(self):
+    def __init__(self, buffer_logos):
+        self._buffer_logos = buffer_logos
         self.fake = Faker('en_US')
         self.fake.add_provider(faker_commerce.Provider)
         self.first_name = self.fake.first_name()
         self.last_name = self.fake.last_name()
-        self.data_types = {
-            'logo': self.logo,
-            'invoice_no': self.invoice_no,
-            'address': self.address,
-            'date': self.date,
-            'email': self.email,
-            'company': self.company_name,
-            'client_name': self.client_name,
-            'item_list': self.item_list,
-            'custom': self.custom}
+        self.data_types = {}
+        for name, method in inspect.getmembers(self, predicate=inspect.ismethod):
+            if not name.startswith('__') and not name.startswith('_'):
+                self.data_types[name] = method
 
-    def __new__(cls, *args, **kwargs):
-        if not cls._instance:
-            cls._instance = super(DataGenerator, cls).__new__(cls, *args, **kwargs)
+    def __new__(cls, buffer_logos=None):
+        if cls._instance is None:
+            # Store the init parameter before creating the instance
+            cls._init_params = {'buffer_logos': buffer_logos}
+            cls._instance = super(DataGenerator, cls).__new__(cls)
         return cls._instance

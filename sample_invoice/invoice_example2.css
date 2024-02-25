@@ -5,6 +5,6 @@
  white-space: nowrap;
 }
 
-#infos1, #infos2 {
-
+#header {
+ font-size: 100px;
 }

@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 
 from pdf_generation import html_parser
 from pdf_generation.Annotation import *
+from pdf_generation.html_parser import *
 from util.constants import *
 from pdf_generation.GenerationAttributes import GenerationAttributes, BoundingBox
 
@@ -55,23 +56,21 @@ Renders a single PDF document from html and css templates.
 
 
 def render(gen_attr: GenerationAttributes):
+
     if os.path.exists(DEFAULT_TMP_PATH + "invoice.css"):
         os.remove(DEFAULT_TMP_PATH + "invoice.css")
     if os.path.exists(DEFAULT_TMP_PATH + "invoice.html"):
         os.remove(DEFAULT_TMP_PATH + "invoice.html")
 
-    template_path = '../sample_invoice/invoice_example1.html'
-    template_css = '../sample_invoice/invoice_example1.css'
+    template_path = '../sample_invoice/invoice_example2.html'
+    template_css = '../sample_invoice/invoice_example2.css'
 
-    annotation_object = Annotation()
-
-    # TODO: Change input
     with open(DEFAULT_TMP_PATH + 'invoice.css', 'w', encoding="utf-8") as css_file, open(template_css, 'r') as input_file:
         for line in input_file:
             css_file.write(line)
 
     with open(template_path, encoding="utf-8") as html_file:
-        html_parser.fill_html(html_file)
+        html_parser.fill_html(html_file, gen_attr.buffer_logos)
 
     if gen_attr.display_bounding_boxes:
         with open(template_path, encoding="utf-8") as html_file:
@@ -85,71 +84,10 @@ def render(gen_attr: GenerationAttributes):
 
     with open(template_path, encoding="utf-8") as html_file:
 
-        with io.StringIO() as buf, redirect_stdout(buf):
-            pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
+        #with io.StringIO() as buf, redirect_stdout(buf):
+        pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
                                      options={"enable-local-file-access": ""}, css=DEFAULT_TMP_PATH + "invoice.css",
                                      verbose=True)
-            extract_and_save_information(buf, gen_attr.annotation_output_path, annotation_object)
+            #extract_and_save_information(buf, gen_attr.annotation_output_path)
+
         return pdf
-
-
-"""
-Extracts position information from the html file
-"""
-
-
-def extract_and_save_information(buf, annotation_output_path, annotation_object):
-    with codecs.open(annotation_output_path, "w", encoding="utf-8") as file:
-        string = buf.getvalue()
-        matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;[0-9]+;[0-9]+;.+;", string)
-
-        for m in matches:
-            string_arr = m.split(';')
-            annotation_object.data[string_arr[1]] = DataObject()
-            annotation_object.data[string_arr[1]].position = Position(string_arr[2], string_arr[3],
-                                                                      string_arr[4], string_arr[5])
-            annotation_object.data[string_arr[1]].value = string_arr[6]
-
-        # Ensure correct utf-8 encoding
-        jsonpickle.set_encoder_options('json', ensure_ascii=False)
-        file.write(jsonpickle.encode(annotation_object, unpicklable=False, max_depth=10))
-
-
-"""
-Reads in the JS-Script file and appends the script to the html file.
-"""
-
-
-def add_js_to_html():
-    with open(DEFAULT_GENERATION_SCRIPT_PATH, encoding='utf-8') as script:
-        soup = BeautifulSoup()
-        soup.append(BeautifulSoup("<script>" + script.read() + "</script>", features="html.parser"))
-
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+', encoding="utf-8") as f:
-        f.write(str(soup))
-
-
-"""
-Generates visual bounding boxes for all randomly placed Elements.
-"""
-
-
-def generate_bounding_boxes(html):
-    soup = BeautifulSoup(html, 'html.parser')
-    output = BeautifulSoup()
-    elems = soup.findAll()
-    for elem in elems:
-        if 'data-position' in elem.attrs:
-            position_string = elem.attrs['data-position'].split(' ')
-            tag = soup.new_tag("div", style=f"""
-                position: absolute;
-                height: {int(position_string[3]) - int(position_string[1])}px;
-                width: {int(position_string[2]) - int(position_string[0])}px;
-                left: {position_string[0]}px;
-                bottom: {position_string[1]}px;
-                border: 1px solid #f32177;
-            """)
-            output.append(tag)
-
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+', encoding="utf-8") as f:
-        f.write(str(output))

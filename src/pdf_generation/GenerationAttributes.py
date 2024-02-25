@@ -7,6 +7,7 @@ class GenerationAttributes:
     annotation_output_path: str
     temp_path: str
     display_bounding_boxes: bool
+    buffer_logos: bool
 
 class BoundingBox:
     def __init__(self, x1, y1, x2, y2):
