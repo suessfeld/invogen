@@ -84,10 +84,10 @@ def render(gen_attr: GenerationAttributes):
 
     with open(template_path, encoding="utf-8") as html_file:
 
-        #with io.StringIO() as buf, redirect_stdout(buf):
-        pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
+        with io.StringIO() as buf, redirect_stdout(buf):
+            pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
                                      options={"enable-local-file-access": ""}, css=DEFAULT_TMP_PATH + "invoice.css",
                                      verbose=True)
-            #extract_and_save_information(buf, gen_attr.annotation_output_path)
+            extract_and_save_information(buf, gen_attr.annotation_output_path)
 
         return pdf

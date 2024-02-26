@@ -22,12 +22,12 @@ window.addEventListener('DOMContentLoaded', function () {
             (elem.getAttribute("data-type") !== "address" &&
                 elem.getAttribute("data-type") !== "item_list")) {
 
-            var x1 = elem.style.left
-            var y1 = elem.style.bottom
-            var x2 = x1 + elem.clientWidth
-            var y2 = y1 + elem.clientHeight
+            var x1 = Math.abs(elem.getBoundingClientRect().left)
+            var y1 = Math.abs(elem.getBoundingClientRect().bottom)
+            var x2 = x1 + elem.getBoundingClientRect().width
+            var y2 = y1 + elem.getBoundingClientRect().height
 
-            console.log("position-absolute;" + elem.id + ";" + x1 + ";" + y2 + ";" + x2 + ";" + y2 + ";"
+            console.log("position-absolute;" + elem.id + ";" + x1 + ";" + y1 + ";" + x2 + ";" + y2 + ";"
                 + elem.innerHTML + ";");
         }
     }
