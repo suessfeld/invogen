@@ -1,6 +1,7 @@
 import codecs
 import json
 import logging
+import os
 import random
 import re
 import string
@@ -13,14 +14,14 @@ from pdf_generation.Annotation import Annotation, DataObject, Position
 from util.constants import *
 
 
-def fill_html(html, buffer_logos):
+def fill_html(html, buffer_logos, gen_attr):
     data_generator = DataGenerator(buffer_logos)
     provided_types = data_generator.data_types
     soup = BeautifulSoup(html, 'html.parser')
     elems = soup.findAll()
 
     # fonts:
-    set_font(soup)
+    set_font(soup, gen_attr)
 
     for elem in elems:
         if 'data-type' in elem.attrs:
@@ -112,7 +113,7 @@ def fill_html(html, buffer_logos):
                         row = soup.new_tag("tr")
                         td = soup.new_tag("td")
                         td.append(create_tag(soup, "span", f'{str(elem["id"])}_item_{count}_name', item.name))
-                        row.append(td);
+                        row.append(td)
 
                         td = soup.new_tag("td")
                         td.append(
@@ -140,7 +141,7 @@ def fill_html(html, buffer_logos):
 
                     elem.append(last_row)
 
-                    with open(DEFAULT_TMP_PATH + 'invoice.css', 'a', encoding="utf-8") as f:
+                    with open(gen_attr.temp_path + 'invoice.css', 'a', encoding="utf-8") as f:
                         f.write(generate_table_styles(elem, config))
 
                 else:
@@ -151,7 +152,7 @@ def fill_html(html, buffer_logos):
                 logging.error(f'Data type {elem.attrs["data-type"]} is unknown! This field will not be filled.')
                 logging.error(e)
 
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'w', encoding="utf-8") as f:
+    with open(gen_attr.temp_path + 'invoice.html', 'w', encoding="utf-8") as f:
         f.write(str(soup))
 
 
@@ -190,7 +191,7 @@ def generate_table_styles(table, config):
     return output
 
 
-def set_font(soup):
+def set_font(soup, gen_attr):
     elem = soup.findAll("html")[0]
     font_choice = '"Courier New", Courier, monospace;'
     size_choice = 30
@@ -217,7 +218,7 @@ def set_font(soup):
         backgrounds = data_background.split(';')
         background_choice = random.choice(backgrounds)
 
-    with open(DEFAULT_TMP_PATH + 'invoice.css', 'a', encoding="utf-8") as f:
+    with open(gen_attr.temp_path + 'invoice.css', 'a', encoding="utf-8") as f:
 
         f.write('\nhtml, table {'
                 f'font-family: {font_choice};\n'
@@ -254,12 +255,12 @@ Reads in the JS-Script file and appends the script to the html file.
 """
 
 
-def add_js_to_html():
+def add_js_to_html(gen_attr):
     with open(DEFAULT_GENERATION_SCRIPT_PATH, encoding='utf-8') as script:
         soup = BeautifulSoup()
         soup.append(BeautifulSoup("<script>" + script.read() + "</script>", features="html.parser"))
 
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+', encoding="utf-8") as f:
+    with open(os.path.normpath(gen_attr.temp_path + 'invoice.html'), 'a+', encoding="utf-8") as f:
         f.write(str(soup))
 
 
@@ -268,7 +269,7 @@ Generates visual bounding boxes for all randomly placed Elements.
 """
 
 
-def generate_bounding_boxes(html):
+def generate_bounding_boxes(html, gen_attr):
     soup = BeautifulSoup(html, 'html.parser')
     output = BeautifulSoup()
     elems = soup.findAll()
@@ -285,7 +286,7 @@ def generate_bounding_boxes(html):
             """)
             output.append(tag)
 
-    with open(DEFAULT_TMP_PATH + 'invoice.html', 'a+', encoding="utf-8") as f:
+    with open(gen_attr.temp_path + 'invoice.html', 'a+', encoding="utf-8") as f:
         f.write(str(output))
 
 

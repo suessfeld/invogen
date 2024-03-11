@@ -1,0 +1,7 @@
+typer~=0.7.0
+jsonpickle~=3.0.2
+beautifulsoup4~=4.12.2
+pdfkit~=1.0.0
+Faker~=19.6.1
+requests~=2.31.0
+rstr~=3.2.2

@@ -8,7 +8,6 @@ import faker
 import requests
 import rstr
 
-import faker_commerce
 from faker import Faker
 
 import pdf_generation
@@ -38,17 +37,16 @@ class DataGenerator:
     def date(self):
         date = self.fake.date_this_century()
         rand = random.randint(0, 4)
-        match rand:
-            case 0:
-                return f"{date.day}.{date.month}.{date.year}"
-            case 1:
-                return f"{date.day}/{date.month}/{str(date.year)[len(str(date.year)) - 2:]}"
-            case 2:
-                return f"{date.year}-{date.month}-{date.day}"
-            case 3:
-                return f"{calendar.month_name[date.month]} {date.day}, {date.year}"
-            case 4:
-                return f"{calendar.month_abbr[date.month]} {date.day}, {date.year}"
+        if rand == 0:
+            return f"{date.day}.{date.month}.{date.year}"
+        elif rand == 1:
+            return f"{date.day}/{date.month}/{str(date.year)[len(str(date.year)) - 2:]}"
+        elif rand == 2:
+            return f"{date.year}-{date.month}-{date.day}"
+        elif rand == 3:
+            return f"{calendar.month_name[date.month]} {date.day}, {date.year}"
+        elif rand == 4:
+            return f"{calendar.month_abbr[date.month]} {date.day}, {date.year}"
 
     def address(self):
         return Address(self.fake.street_name(),
@@ -128,7 +126,7 @@ class DataGenerator:
     def __init__(self, buffer_logos):
         self._buffer_logos = buffer_logos
         self.fake = Faker('en_US')
-        self.fake.add_provider(faker_commerce.Provider)
+        self.fake.add_provider(pdf_generation.faker_commerce.Provider)
         self.first_name = self.fake.first_name()
         self.last_name = self.fake.last_name()
         self.data_types = {}

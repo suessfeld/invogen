@@ -13,6 +13,9 @@ window.addEventListener('DOMContentLoaded', function () {
             bottom = Math.min(bottom, parseInt(boundingBox[3]) - elem.scrollHeight);
             left = Math.min(left, parseInt(boundingBox[2]) - elem.scrollWidth);
 
+            console.log("scroll: " + elem.scrollHeight + ", boundingClientRect: " + elem.getBoundingClientRect().height + ", computed: " + window.getComputedStyle(elem).height +
+            "offset: " + elem.offsetHeight)
+
             elem.style.position = 'absolute';
             elem.style.left = left + "px";
             elem.style.bottom = bottom + "px";

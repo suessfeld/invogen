@@ -5,6 +5,8 @@ class GenerationAttributes:
     amount: int
     invoice_output_path: str
     annotation_output_path: str
+    input_html: str
+    input_css: str
     temp_path: str
     display_bounding_boxes: bool
     buffer_logos: bool

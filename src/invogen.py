@@ -20,7 +20,8 @@ Parses and validates arguments
 @app.command()
 def generate(output: Optional[str] = None, amount: int = 0,
              display_bounding_boxes: Optional[bool] = False,
-             buffer_logos: Optional[bool] = False):
+             buffer_logos: Optional[bool] = False,
+             input_html: str = None, input_css: str = None):
 
     gen_attr = pdf_generation.GenerationAttributes()
 
@@ -29,18 +30,16 @@ def generate(output: Optional[str] = None, amount: int = 0,
         gen_attr.annotation_output_path = DEFAULT_ANNOTATION_OUTPUT_PATH
         gen_attr.temp_path = DEFAULT_TMP_PATH
     else:
-        if not os.path.exists(output):
-            logging.error("Output path does not exist")
-            sys.exit(-1)
+        gen_attr.invoice_output_path = output + "/invoices/"
+        gen_attr.annotation_output_path = output + "/annotation_data/"
+        gen_attr.temp_path = output + "/temp/"
 
-        gen_attr.invoice_output_path = output + "\\invoices\\"
-        gen_attr.annotation_output_path = output + "\\annotation_data\\"
-        gen_attr.temp_path = output + "\\temp\\"
-
+    print(gen_attr.invoice_output_path)
     gen_attr.display_bounding_boxes = display_bounding_boxes
     gen_attr.buffer_logos = buffer_logos
+    gen_attr.input_html = input_html
+    gen_attr.input_css = input_css
     gen_attr.amount = amount
-
 
     pdf_generation.generate_pdfs(gen_attr)
 

@@ -1,6 +1,7 @@
 import io
 import logging
 import os
+import platform
 import re
 import codecs
 import sys
@@ -57,36 +58,38 @@ Renders a single PDF document from html and css templates.
 
 def render(gen_attr: GenerationAttributes):
 
-    if os.path.exists(DEFAULT_TMP_PATH + "invoice.css"):
-        os.remove(DEFAULT_TMP_PATH + "invoice.css")
-    if os.path.exists(DEFAULT_TMP_PATH + "invoice.html"):
-        os.remove(DEFAULT_TMP_PATH + "invoice.html")
+    if os.path.exists(gen_attr.temp_path + "invoice.css"):
+        os.remove(gen_attr.temp_path + "invoice.css")
+    if os.path.exists(gen_attr.temp_path + "invoice.html"):
+        os.remove(gen_attr.temp_path + "invoice.html")
 
-    template_path = '../sample_invoice/invoice_example2.html'
-    template_css = '../sample_invoice/invoice_example2.css'
-
-    with open(DEFAULT_TMP_PATH + 'invoice.css', 'w', encoding="utf-8") as css_file, open(template_css, 'r') as input_file:
+    with open(gen_attr.temp_path + 'invoice.css', 'w', encoding="utf-8") as css_file, open(gen_attr.input_css, 'r') as input_file:
         for line in input_file:
             css_file.write(line)
 
-    with open(template_path, encoding="utf-8") as html_file:
-        html_parser.fill_html(html_file, gen_attr.buffer_logos)
+    with open(gen_attr.input_html, encoding="utf-8") as html_file:
+        html_parser.fill_html(html_file, gen_attr.buffer_logos, gen_attr)
 
     if gen_attr.display_bounding_boxes:
-        with open(template_path, encoding="utf-8") as html_file:
-            generate_bounding_boxes(html_file)
+        with open(gen_attr.input_html, encoding="utf-8") as html_file:
+            generate_bounding_boxes(html_file, gen_attr)
         gen_attr.display_bounding_boxes = False
 
-    add_js_to_html()
+    add_js_to_html(gen_attr)
 
-    template_path = DEFAULT_TMP_PATH + 'invoice.html'
-    config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+    template_path = gen_attr.temp_path + 'invoice.html'
+
+    config = None
+    if platform.system() == 'Windows':
+        config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+    else:
+        config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
 
     with open(template_path, encoding="utf-8") as html_file:
 
         with io.StringIO() as buf, redirect_stdout(buf):
             pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
-                                     options={"enable-local-file-access": ""}, css=DEFAULT_TMP_PATH + "invoice.css",
+                                     options={"enable-local-file-access": ""}, css=gen_attr.temp_path + "invoice.css",
                                      verbose=True)
             extract_and_save_information(buf, gen_attr.annotation_output_path)
 
