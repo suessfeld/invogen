@@ -34,7 +34,6 @@ def generate(output: Optional[str] = None, amount: int = 0,
         gen_attr.annotation_output_path = output + "/annotation_data/"
         gen_attr.temp_path = output + "/temp/"
 
-    print(gen_attr.invoice_output_path)
     gen_attr.display_bounding_boxes = display_bounding_boxes
     gen_attr.buffer_logos = buffer_logos
     gen_attr.input_html = input_html

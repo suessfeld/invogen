@@ -1,4 +1,4 @@
-<html data-fonts="preconnect;Oswald;Syne Mono, monospace;Roboto Condensed" data-fontsize="36;43"
+<html data-fonts="preconnect;Syne Mono, monospace;Roboto Condensed" data-fontsize="36;43"
       data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#EDEADE;#F9F6EE;#FAF9F6">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,17 +12,18 @@
     <meta name="pdfkit-margin-bottom" content="0px"/>
     <meta name="pdfkit-disable-smart-shrinking" content=""/>
     <meta name="pdfkit-debug-javascript" content=""/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
-<img id="logo" data-position="1500 3200 2395 3423" data-type="logo" data-config='
+<img id="logo" data-position="1300 3200 2195 3423" data-type="logo" data-config='
 {
     "height": "80;120"
 }
 '>
 <h1 id="header" data-position="900 3000 1438 3100" data-type="custom" data-list="
-Invoice;Receipt;INVOICE; I n v o i c e; "></h1>
+Invoice;Receipt;INVOICE; I n v o i c e; ;invoice;receipt"></h1>
 
-<table data-position="200 2400 1220 2950">
+<table data-position="200 2400 1220 2950" id="billed_to_table">
     <tr>
         <td><strong>BILLED TO</strong></td>
     </tr>
@@ -64,13 +65,15 @@ Invoice;Receipt;INVOICE; I n v o i c e; "></h1>
     "maxElems": 14,
     "minFontSize": 40,
     "maxFontSize": 60,
-    "minPadding": 10,
-    "maxPadding": 25,
-    "colors": "#d3d3d3;#FFD5D5;#FFFFFF"
+    "minPadding": 40,
+    "maxPadding": 60,
+    "colors": "#d3d3d3;#FFD5D5;#FFFFFF;#FFFFFF"
 }
 '></table>
+<img id="qr-code" data-position="300 200 800 400"
+     src="https://upload.wikimedia.org/wikipedia/commons/0/0b/QR_code_Wikimedia_Commons_%28URL%29.png">
 
-<div data-position="300 200 2180 400" data-type="custom" data-list="
+<div data-position="900 200 2180 400" data-type="custom" data-list="
 Thanks for making business with us!;Thank you!;If you have any questions please contact us!;For inquiries contact us.;Payment is required within 14 business days;Payment is due within 10 days
 "></div>
 </html>

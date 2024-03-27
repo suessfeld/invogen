@@ -174,10 +174,11 @@ def generate_table_styles(table, config):
 
     padding = random.randint(int(config["minPadding"]), int(config["maxPadding"]))
     width = random.randint(int(config["minWidth"]), int(config["maxWidth"]))
+    font_size = random.randint(config["minFontSize"], config["maxFontSize"])
 
     output = f'#{table["id"]} {{ width: {width}px;' \
              f'padding: {random.randint(int(config["minPadding"]), int(config["maxPadding"]))}px;' \
-             f'font-size: {random.randint(config["minFontSize"], config["maxFontSize"])}px;' \
+             f'font-size: {font_size}px;' \
              f'text-align: right;' \
              f'box-sizing: border-box;' \
              f'border-spacing: 0px;' \
@@ -185,8 +186,7 @@ def generate_table_styles(table, config):
              f'\n' \
              f'#{table["id"]} tr:nth-child(even) {{background: {color};}}' \
              f'\n' \
-             f'#{table["id"]} td {{border-bottom: {padding}px solid transparent;' \
-             f'border-top: {padding}px solid transparent;}}'
+             f'#{table["id"]} tr {{height: {font_size + padding}px; border: 10px solid black;}}'
 
     return output
 
