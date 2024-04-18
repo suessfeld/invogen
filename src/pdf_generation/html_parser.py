@@ -33,7 +33,7 @@ def fill_html(html, buffer_logos, gen_attr):
                     config = json.loads(elem['data-config'])
 
                     # validate options
-                    viable_options = {'height'}
+                    viable_options = {'width'}
                     config_keys = set(config.keys())
                     extra_keys = config_keys - viable_options
                     if extra_keys:
@@ -41,10 +41,10 @@ def fill_html(html, buffer_logos, gen_attr):
                         continue
 
                     # Table background color:
-                    heights = str(config['height']).split(';')
+                    widths = str(config['width']).split(';')
 
                     elem['src'] = provided_types[data_type]()
-                    elem['style'] = f'height:{random.randint(int(heights[0]), int(heights[1]))}px'
+                    elem['style'] = f'width:{random.randint(int(widths[0]), int(widths[1]))}px'
 
                 elif data_type == 'custom':
                     elem.string = provided_types[data_type](elem['data-list'])
@@ -197,34 +197,41 @@ def set_font(soup, gen_attr):
     size_choice = 30
     background_choice = 'white'
     color_choice = 'black'
+    selected = False
 
     if 'data-fonts' in elem.attrs:
         data_fonts = elem.attrs['data-fonts']
         fonts = data_fonts.split(';')
         font_choice = random.choice(fonts)
+        selected = True
 
     if 'data-fontsize' in elem.attrs:
         data_fontsize = elem.attrs['data-fontsize']
         limits = data_fontsize.split(';')
         size_choice = random.randint(int(limits[0]), int(limits[1]))
+        selected = True
 
     if 'data-fontsize' in elem.attrs:
         data_fontcolor = elem.attrs['data-fontcolor']
         colors = data_fontcolor.split(';')
         color_choice = random.choice(colors)
+        selected = True
 
     if 'data-background' in elem.attrs:
         data_background = elem.attrs['data-background']
         backgrounds = data_background.split(';')
         background_choice = random.choice(backgrounds)
+        selected = True
 
-    with open(gen_attr.temp_path + 'invoice.css', 'a', encoding="utf-8") as f:
+    if selected:
+        with open(gen_attr.temp_path + 'invoice.css', 'a', encoding="utf-8") as f:
 
-        f.write('\nhtml, table {'
-                f'font-family: {font_choice};\n'
-                f'font-size: {size_choice}px;\n'
-                f'color: {color_choice};\n'
-                f'background: {background_choice};}}')
+            f.write('\nhtml, table {'
+                    f'font-family: {font_choice};\n'
+                    f'font-size: {size_choice}px;\n'
+                    f'color: {color_choice};\n'
+                    f'background: {background_choice};}}')
+            f.close()
 
 
 """

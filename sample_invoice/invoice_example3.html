@@ -1,0 +1,149 @@
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
+
+<html data-fonts="Courier Prime;Special Elite" data-fontsize="12;15"
+      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#FAF9F6">
+<head>
+    <meta charset="UTF-8">
+    <meta name="pdfkit-page-height" content="2430px"/>
+    <meta name="pdfkit-page-width" content="500px"/>
+    <meta name="pdfkit-margin-top" content="0px"/>
+    <meta name="pdfkit-margin-right" content="0px"/>
+    <meta name="pdfkit-margin-left" content="0px"/>
+    <meta name="pdfkit-margin-bottom" content="0px"/>
+    <meta name="pdfkit-disable-smart-shrinking" content=""/>
+    <meta name="pdfkit-debug-javascript" content=""/>
+    <meta name="pdfkit-dpi" content="96"/>
+</head>
+
+<img id="logo" data-position="150 2250 350 2350" data-type="logo" data-config='
+{
+    "width": "150;250"
+}
+'>
+
+<table data-position="100 2100 400 2171">
+    <tbody>
+    <tr>
+        <td><span id="billed_to_name" data-type="company"></span></td>
+    </tr>
+    <tr>
+        <td><span id="billed_to_address" data-type="address"></span></td>
+    </tr>
+    </tbody>
+</table>
+
+<div id="line_top" data-position="200 2075 300 2100" data-type="custom" data-list="
+---------------------------------------------------------------;---------------------------------------------------------------------------------------------------"></div>
+<div id="top-text1" data-position="50 2050 450 2075" data-type="custom" data-list="
+Thank you for your purchase!;
+Visit us again soon.;Earn points on every purchase;
+Enroll in our loyalty program today!;Did we meet your expectations?;
+Leave us a review on our site.;Exclusive deals for our newsletter subscribers.;
+Sign up now!; Save your receipt for returns or exchanges within 30 days.;
+Follow us on social media for updates;Check out our website;
+Exclusives and more online!; We're committed to sustainability;
+Learn how you can help on our website.; Join our community event next month;
+Keep your receipt!; Get a free gift next time; We value your feedback!;
+Tell us how we can improve.; Scan the QR code to get rewards
+Click & Collect at our store;
+Get inspiration at our website!;
+"></div>
+<div id="top-text2" data-position="50 2000 450 2050" data-type="custom" data-list="
+Thank you for your purchase!;
+Visit us again soon.;Earn points on every purchase;
+Enroll in our loyalty program today!;Did we meet your expectations?;
+Leave us a review on our site.;Exclusive deals for our newsletter subscribers.;
+Sign up now!; Save your receipt for returns or exchanges within 30 days.;
+Follow us on social media for updates;Check out our website;
+Exclusives and more online!; We're committed to sustainability;
+Learn how you can help on our website.; Join our community event next month;
+Keep your receipt!; Get a free gift next time; We value your feedback!;
+Tell us how we can improve.; Scan the QR code to get rewards
+Click & Collect at our store;
+Get inspiration at our website!;
+"></div>
+<table id="item_list" data-type="item_list" data-position="50 1000 450 2000" data-config='
+{
+    "minWidth": 300,
+    "maxWidth": 400,
+    "minElems": 30,
+    "maxElems": 40,
+    "minFontSize": 13,
+    "maxFontSize": 16,
+    "minPadding": 5,
+    "maxPadding": 10,
+    "colors": "#d3d3d3;#FFFFFF;#FFFFFF"
+}
+'></table>
+
+<img id="qr-code" data-position="50 700 450 1000"
+     src="https://upload.wikimedia.org/wikipedia/commons/0/0b/QR_code_Wikimedia_Commons_%28URL%29.png" data-config='
+{
+    "height": "80;120"
+}
+'>
+<table data-position="50 500 450 700">
+    <tr>
+        <td><span>**********************************</span></td>
+    </tr>
+    <tr>
+        <td>Date: <strong id="date" data-type="date"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span>Nr: <strong id="invoice_number" data-type="regex" data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span>Payed With: <strong id="payed_with" data-type="custom" data-list="Mastercard;Visa;American Express"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span>Card Number: <strong id="card_number" data-type="regex" data-regex="^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span>Terminal: <strong id="Terminal ID" data-type="regex" data-regex="[0-9]{5,10}"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span>**********************************</span></td>
+    </tr>
+</table>
+<div id="line_bottom" data-position="50 450 450 500" data-type="custom" data-list="
+-----------------------------------------------------------------------;=============================;
+"></div>
+<table data-position="50 350 250 450">
+    <tr>
+        <td><span data-type="custom" data-list="********; = = = = = = =;^^^^^^^^^^^^^^^^^^^^^^^"></span></td>
+    </tr>
+    <tr>
+        <td><span id="customer_service" data-type="custom" data-list="customer service:;CALL US!;CUSTOMER SERVICE"></span></td>
+    </tr>
+    <tr>
+        <td><span><strong id="customer_service_phonenumber" data-type="regex" data-regex="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span data-type="custom" data-list="********; = = = = = = =;^^^^^^^^^^^^^^^^^^^^^^^"></span></td>
+    </tr>
+</table>
+<table data-position="250 350 450 450">
+    <tr>
+        <td><span data-type="custom" data-list="********; = = = = = = =;^^^^^^^^^^^^^^^^^^^^^^^"></span></td>
+    </tr>
+    <tr>
+        <td><span id="transaction" data-type="custom" data-list="transaction id; ID; Reference ID:"></span></td>
+    </tr>
+    <tr>
+        <td><span id="transaction_id" data-type="regex" data-regex="[0-9]{6,10}"></span></td>
+    </tr>
+    <tr>
+        <td><span data-type="custom" data-list="********; = = = = = = =;^^^^^^^^^^^^^^^^^^^^^^^"></span></td>
+    </tr>
+</table>
+
+<div id="thanks-text" data-position="50 300 450 350" data-type="custom" data-list="
+Thanks for making business with us!;Thank you!;If you have any questions please contact us!
+"></div>
+<img id="logo_bottom" data-position="150 150 350 300" data-type="logo" data-config='
+{
+    "width": "150;250"
+}
+'>
+</html>
