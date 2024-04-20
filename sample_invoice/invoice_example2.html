@@ -15,65 +15,113 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
-<img id="logo" data-position="1300 3200 2195 3423" data-type="logo" data-config='
+<img id="logo" data-position="200 3200 800 3423" data-type="logo" data-config='
 {
-    "height": "80;120"
+    "width": "200;300"
 }
 '>
-<h1 id="header" data-position="900 3000 1438 3100" data-type="custom" data-list="
+<h1 id="header" data-position="1250 3000 2277 3100" data-type="custom" data-list="
 Invoice;Receipt;INVOICE; I n v o i c e; ;invoice;receipt"></h1>
 
-<table data-position="200 2400 1220 2950" id="billed_to_table">
-    <tr>
-        <td><strong>BILLED TO</strong></td>
-    </tr>
+<table data-position="200 2800 1220 3150" id="billed_to_table">
     <tr>
         <td><span id="billed_to_name" data-type="company"></span></td>
     </tr>
     <tr>
         <td><span id="billed_to_address" data-type="address"></span></td>
     </tr>
-    <tr>
-        <td>Pay Due: <strong id="billed_to_date" data-type="date"></strong></td>
-    </tr>
+    <td><span data-type="custom" data-list="PHONE: ;phone: ;Contact:"></span><strong id="customer_service_phonenumber" data-type="regex" data-regex="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$"></strong></td>
 </table>
 
+<table data-position="200 2400 1220 2750" id="sold_to_table">
+    <tr>
+        <td><strong data-type="custom" data-list="SOLD TO; Sold To; Customer; Customer Information:; Customer Address:"></strong></td>
+    </tr>
+    <tr>
+        <td><span id="sold_to_name" data-type="company"></span></td>
+    </tr>
+    <tr>
+        <td><span id="sold_to_address" data-type="address"></span></td>
+    </tr>
+</table>
 <table data-position="1260 2400 2277 2950">
     <tr>
-        <td><strong>BILLED BY</strong></td>
+        <td><strong data-type="custom" data-list="SUMMARY; Billing summary; INFORMATION"></strong></td>
     </tr>
     <tr>
-        <td><span id="billed_by_name" data-type="company"></span></td>
+        <td><span data-type="custom" data-list="***********;;---------------------"></span></td>
     </tr>
     <tr>
-        <td><span id="billed_by_address" data-type="address"></span></td>
+        <td>Date: <strong id="date" data-type="date"></strong></span></td>
     </tr>
     <tr>
-        <td>Invoice Date: <strong id="billed_by_date" data-type="date"></strong></td>
+        <td><span>Nr: <strong id="invoice_number" data-type="regex" data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span></td>
     </tr>
     <tr>
-        <td>Invoice No.: <strong id="invoice_number" data-type="regex"
-                                 data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{3,5}"></strong></td>
+        <td><span>Payed With: <strong id="payed_with" data-type="custom" data-list="Mastercard;Visa;American Express"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span>Card Number: <strong id="card_number" data-type="regex" data-regex="^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span>Terminal: <strong id="Terminal ID" data-type="regex" data-regex="[0-9]{5,10}"></strong></span></td>
+    </tr>
+    <tr>
+        <td><span id="transaction" data-type="custom" data-list="transaction id; ID; Reference ID:"></span></td>
+    </tr>
+    <tr>
+        <td><span id="transaction_id" data-type="regex" data-regex="[0-9]{6,10}"></span></td>
     </tr>
 </table>
-
-<table id="item_list" data-type="item_list" data-position="100 450 2100 2300" data-config='
+<h2 id="subheader" data-position="100 2300 1500 2400" data-type="custom" data-list="
+SUBSUMMARY; summary; CHARGES"></h2>
+<table id="item_list" data-type="item_list" data-position="100 1700 2100 2300" data-config='
 {
-    "minWidth": 1500,
+    "minWidth": 1800,
     "maxWidth": 2000,
-    "minElems": 10,
-    "maxElems": 14,
-    "minFontSize": 40,
-    "maxFontSize": 60,
-    "minPadding": 40,
-    "maxPadding": 60,
-    "colors": "#d3d3d3;#FFD5D5;#FFFFFF;#FFFFFF"
+    "minElems": 9,
+    "maxElems": 12,
+    "minFontSize": 30,
+    "maxFontSize": 40,
+    "minPadding": 10,
+    "maxPadding": 20,
+    "colors": "#d3d3d3;#FFFFFF"
 }
 '></table>
-<img id="qr-code" data-position="300 200 800 400"
+<h2 id="additional_orders_1" data-position="50 1600 1200 1700" data-type="custom" data-list="
+Additional Orders; Extras:;EXTRAS:"></h2>
+<table id="item_list_2" data-type="item_list" data-position="50 1100 1200 1600" data-config='
+{
+    "minWidth": 800,
+    "maxWidth": 950,
+    "minElems": 6,
+    "maxElems": 8,
+    "minFontSize": 20,
+    "maxFontSize": 30,
+    "minPadding": 10,
+    "maxPadding": 20,
+    "colors": "#d3d3d3;#FFFFFF"
+}
+'></table>
+<h2 id="additional_orders_2" data-position="1200 1600 2400 1700" data-type="custom" data-list="
+Additional Orders; Extras:;EXTRAS:"></h2>
+<table id="item_list_3" data-type="item_list" data-position="1200 1100 2400 1600" data-config='
+{
+   "minWidth": 800,
+    "maxWidth": 950,
+    "minElems": 4,
+    "maxElems": 6,
+    "minFontSize": 20,
+    "maxFontSize": 30,
+    "minPadding": 10,
+    "maxPadding": 20,
+    "colors": "#d3d3d3;#FFFFFF"
+}
+'></table>
+<img id="qr-code" data-position="300 400 800 700"
      src="https://upload.wikimedia.org/wikipedia/commons/0/0b/QR_code_Wikimedia_Commons_%28URL%29.png">
 
-<div data-position="900 200 2180 400" data-type="custom" data-list="
+<div data-position="900 400 2180 700" data-type="custom" data-list="
 Thanks for making business with us!;Thank you!;If you have any questions please contact us!;For inquiries contact us.;Payment is required within 14 business days;Payment is due within 10 days
 "></div>
 </html>
