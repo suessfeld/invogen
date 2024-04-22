@@ -1,0 +1,19 @@
+
+* {
+ margin: 0;
+ padding: 0;
+ white-space: nowrap;
+}
+
+h1 {
+ font-size: 50px;
+}
+
+#date {
+ margin-right: 50px;
+}
+
+
+#qr-code {
+ height: 150px;
+}

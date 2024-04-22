@@ -1,73 +1,85 @@
-<html data-fonts="Courier;Consolas;Monaco;Inconsolata;Source Code Pro;" data-fontsize="40;50"
+<html data-fonts="preconnect;Syne Mono, monospace;Roboto Condensed" data-fontsize="36;43"
       data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#EDEADE;#F9F6EE;#FAF9F6">
-<link href="https://fonts.cdnfonts.com/css/modern-typewriter" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Cutive+Mono&family=Syne+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 <head>
     <meta charset="UTF-8">
-    <meta name="pdfkit-page-height" content="2400px"/>
-    <meta name="pdfkit-page-width" content="800px"/>
+    <meta name="pdfkit-page-height" content="3508px"/>
+    <meta name="pdfkit-page-width" content="2480px"/>
     <meta name="pdfkit-margin-top" content="0px"/>
     <meta name="pdfkit-margin-right" content="0px"/>
     <meta name="pdfkit-margin-left" content="0px"/>
     <meta name="pdfkit-margin-bottom" content="0px"/>
     <meta name="pdfkit-disable-smart-shrinking" content=""/>
     <meta name="pdfkit-debug-javascript" content=""/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
-<img id="logo" data-position="700 2300 790 2400" data-type="logo" data-config='
+<img id="logo" data-position="1260 3000 2277 3423" data-type="logo" data-config='
 {
-    "height": "30;50"
+    "width": "300;400"
 }
 '>
-<h1 id="header" data-position="250 2250 550 2300" data-type="custom" data-list="
-Invoice;Receipt; "></h1>
-<div id="line_top" data-position="0 2200 800 2250" data-type="custom" data-list="
------------------------------------------------------------------------;
-"></div>
-<table data-position="50 2150 750 2200">
+
+<table data-position="200 3000 1220 3423" id="billed_to_table">
     <tr>
-        <td>Date: <strong id="date" data-type="date"></strong></td>
-        <td>Nr: <strong id="invoice_number" data-type="regex" data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{3,5}"></strong></td>
+        <td><strong><span id="billed_by_name" data-type="company"></span></strong></td>
+    </tr>
+    <tr>
+        <td><span id="billed_by_address" data-type="address"></span></td>
+    </tr>
+    <tr>
+        <td><span id="billed_by_infos" data-type="custom" data-list="Tax ID: ;tax id: ;tax number: ;TAX NUMBER: "></span>  <span id="tax_number" data-type="regex" data-regex="^[0-9]{3} [0-9]{2}/[0-9]{2}$"></span></td>
+    </tr>
+    <tr>
+        <td><span id="billed_by_email" data-type="email"></span></td>
+    </tr>
+    <tr>
+        <td><span data-type="custom" data-list="PHONE: ;phone: ;Contact:"></span><strong id="billed_by_phone" data-type="regex" data-regex="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$"></strong></td>
     </tr>
 </table>
-<table id="item_list" data-type="item_list" data-position="50 600 750 2150" data-config='
+<table data-position="100 2400 600 2750" id="sold_to_table">
+    <tr>
+        <td><strong data-type="custom" data-list="delivery address; ADDRESS; Customer Address; DELIVER TO:"></strong></td>
+    </tr>
+    <tr>
+        <td><span id="sold_to_address" data-type="address"></span></td>
+    </tr>
+</table>
+<table id="invoice_table" data-position="600 2400 2277 2750">
+    <tr>
+        <td><strong data-type="custom" data-list="Invoice;Bill"></strong></td><td></td>
+    </tr>
+    <tr>
+        <td><span>Nr: <strong id="invoice_number" data-type="regex" data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span>   </td>
+        <td><span data-type="custom" data-list="invoice date:;inv. date:;INVOICE DATE:"></span> <strong id="invoice_date" data-type="date"></strong>    </td>
+    </tr>
+    <tr>
+        <td><span>Payed With: <strong id="payed_with" data-type="custom" data-list="Mastercard;Visa;American Express"></strong></span>    </td>
+        <td><span data-type="custom" data-list="order date:;ord. date:;ORDER DATE:"></span> <strong id="order_date" data-type="date"></strong>  </td>
+    </tr>
+    <tr>
+        <td><span>Card Number: <strong id="card_number" data-type="regex" data-regex="^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$"></strong></span>   </td>
+        <td><span data-type="custom" data-list="shipping date:;ship. date:;shipping DATE:"></span>  <strong id="sent_date" data-type="date"></strong>    </td>
+    </tr>
+    <tr>
+        <td><span id="transaction" data-type="custom" data-list="transaction id; ID; Reference ID:"></span> </td>
+        <td><span id="transaction_id" data-type="regex" data-regex="[0-9]{6,10}"></span></td>   </td>
+    </tr>
+</table>
+<table id="item_list" data-type="item_list" data-position="100 200 2100 2400" data-config='
 {
-    "minWidth": 600,
-    "maxWidth": 700,
-    "minElems": 15,
-    "maxElems": 25,
-    "minFontSize": 15,
-    "maxFontSize": 20,
-    "minPadding": 5,
-    "maxPadding": 10,
-    "colors": "#d3d3d3;#FFD5D5;#FFFFFF"
+    "minWidth": 1800,
+    "maxWidth": 2000,
+    "minElems": 20,
+    "maxElems": 26,
+    "minFontSize": 30,
+    "maxFontSize": 40,
+    "minPadding": 30,
+    "maxPadding": 40,
+    "colors": "#d3d3d3;#FFFFFF"
 }
 '></table>
-<div>
 
-</div>
-<img id="qr-code" data-position="300 400 500 600"
-     src="https://upload.wikimedia.org/wikipedia/commons/0/0b/QR_code_Wikimedia_Commons_%28URL%29.png">
-<div id="line_bottom" data-position="0 350 800 400" data-type="custom" data-list="
------------------------------------------------------------------------;
-"></div>
-
-<table data-position="50 200 500 350">
-    <tbody>
-    <tr>
-        <td>Our Store:</td>
-    </tr>
-    <tr>
-        <td id="billed_to_name" data-type="company"></td>
-    </tr>
-    <tr>
-        <td id="billed_to_address" data-type="address"></td>
-    </tr>
-    </tbody>
-</table>
-
-<div id="thanks-text" data-position="50 100 700 200" data-type="custom" data-list="
-Thanks for making business with us!;Thank you!;If you have any questions please contact us!
-"></div>
+    <div data-position="1000 30 1280 100" data-type="custom" data-list="P. 1/1;1/1;Page 1/1; Page 1 of 1"></div>
 </html>

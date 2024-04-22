@@ -1,23 +1,42 @@
 
 * {
- margin: 0;
- padding: 0;
- white-space: nowrap;
+    margin: 0;
+    padding: 0;
+    white-space: nowrap;
 }
 
 h1 {
- font-size: 50px;
+    font-size: 50px;
 }
 
 #date {
- margin-right: 50px;
+    margin-right: 50px;
 }
 
 
 #qr-code {
- height: 150px;
+    height: 150px;
 }
 
 #thanks-text {
 
+}
+
+#invoice_table {
+    border:3px solid black;
+    border-collapse: collapse;
+}
+
+#invoice_table td, #invoice_table th {
+    border: 1px solid black;
+}
+
+#item_list {
+    border:5px solid black;
+    border-collapse: collapse;
+}
+
+#item_list td, #item_list th {
+    border: 1px solid black;
+    text-align: center;
 }

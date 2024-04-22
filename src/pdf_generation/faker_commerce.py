@@ -108,7 +108,6 @@ class Provider(faker.providers.BaseProvider):
             product,
             " ".join([adjective, product]),
             " ".join([material, product]),
-            " ".join([adjective, material, product]),
         ]
 
         names = random.choices(choices, k=1)

@@ -186,7 +186,7 @@ def generate_table_styles(table, config):
              f'\n' \
              f'#{table["id"]} tr:nth-child(even) {{background: {color};}}' \
              f'\n' \
-             f'#{table["id"]} tr {{height: {font_size + padding}px; border: 10px solid black;}}'
+             f'#{table["id"]} tr {{height: {font_size + padding}px;}}'
 
     return output
 
