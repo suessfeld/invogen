@@ -83,63 +83,37 @@ def fill_html(html, buffer_logos, gen_attr):
 
                     # validate options
                     viable_options = {'minWidth', 'maxWidth', 'minPadding', 'maxPadding', 'minFontSize', 'maxFontSize',
-                                      'minElems', 'maxElems', 'colors'}
+                                      'minElems', 'maxElems', 'colors', 'columns'}
                     config_keys = set(config.keys())
                     extra_keys = config_keys - viable_options
                     if extra_keys:
                         logging.error(f"Table has invalid options: {extra_keys}")
                         continue
 
-                    items = provided_types[data_type](config['minElems'], config['maxElems'])
+                    items = provided_types[data_type](config['minElems'], config['maxElems'], str(config['columns']).split(';'))
 
                     first_row = soup.new_tag("tr")
 
-                    th = soup.new_tag("th")
-                    th.append(create_tag(soup, "span", f'{str(elem["id"])}_header_name', 'Product'))
-                    first_row.append(th)
-
-                    th = soup.new_tag("th")
-                    th.append(create_tag(soup, "span", f'{str(elem["id"])}_header_quantity', 'Quantity'))
-                    first_row.append(th)
-
-                    th = soup.new_tag("th")
-                    th.append(create_tag(soup, "span", f'{str(elem["id"])}_header_price', 'Price'))
-                    first_row.append(th)
+                    for field in items[0].get_fields():
+                        th = soup.new_tag("th")
+                        th.append(create_tag(soup, "span", f'{str(elem["id"])}_header_{field.attribute}', field.value))
+                        first_row.append(th)
 
                     elem.append(first_row)
 
                     count = 1
-                    for item in items[:-1]:
+                    for item in items[1:]:
                         row = soup.new_tag("tr")
-                        td = soup.new_tag("td")
-                        td.append(create_tag(soup, "span", f'{str(elem["id"])}_item_{count}_name', item.name))
-                        row.append(td)
+                        for field in item.get_fields():
+                            td = soup.new_tag("td")
+                            td.append(create_tag(
+                                soup,
+                                "span", f'{str(elem["id"])}_item_{count}_{field.attribute}', field.value))
 
-                        td = soup.new_tag("td")
-                        td.append(
-                            create_tag(soup, "span", f'{str(elem["id"])}_item_{count}_quantity', str(item.quantity)))
-                        row.append(td)
-
-                        td = soup.new_tag("td")
-                        td.append(create_tag(soup, "span", f'{str(elem["id"])}_item_{count}_price', str(item.price)))
-                        row.append(td)
+                            row.append(td)
 
                         elem.append(row)
                         count += 1
-
-                    last_row = soup.new_tag("tr")
-                    last_row.append(soup.new_tag("td"))
-
-                    td = soup.new_tag("td")
-                    td.append(create_tag(soup, "span", f'{str(elem["id"])}_total_description', random.choice(
-                        ["Total", "Total: ", "TOTAL", "TOTAL:", "Sum", "Sum:", "SUM", "SUM:"])))
-                    last_row.append(td)
-
-                    td = soup.new_tag("td")
-                    td.append(create_tag(soup, "span", f'{str(elem["id"])}_total_value', items[len(items) - 1].price))
-                    last_row.append(td)
-
-                    elem.append(last_row)
 
                     with open(gen_attr.temp_path + 'invoice.css', 'a', encoding="utf-8") as f:
                         f.write(generate_table_styles(elem, config))

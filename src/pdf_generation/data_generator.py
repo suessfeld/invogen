@@ -9,9 +9,10 @@ import requests
 import rstr
 
 from faker import Faker
+from faker.providers import company
 
 import pdf_generation
-from pdf_generation.Item import Item
+from pdf_generation.Item import Item, ItemField
 from pdf_generation.Address import Address
 from util.constants import LOGO_API_KEY, LOGO_API_URL
 
@@ -96,26 +97,73 @@ class DataGenerator:
         else:
             logging.error("Error:", response.status_code, response.text)
 
-    def item_list(self, lower_bound, upper_bound):
+    def item_list(self, lower_bound, upper_bound, columns):
 
         item_list = []
         currency = random.choice(['$', ' $ ', '€', ' € ', '£', ' £ '])
         currency_in_front = random.randint(0, 1) == 0
         total = 0
 
+        item = Item()
+
+        for column in columns:
+            if column == 'name':
+                item.add_field(ItemField(column, random.choice(["Name", "Product: ", "Name:"])))
+            if column == 'description':
+                item.add_field(ItemField(column, random.choice(["Description", "Desc.:", "Desc.", "Description:"])))
+            if column == 'article_number':
+                item.add_field(ItemField(column, random.choice(["Article No.", "No.: ", "Article No.:"])))
+            if column == 'price':
+                item.add_field(ItemField(column, random.choice(["Price", "Unit Price:", "Price:"])))
+            if column == 'quantity':
+                item.add_field(ItemField(column, random.choice(["Quantity", "Qty.:", "Quantity:", "Qty."])))
+            if column == 'tax':
+                item.add_field(ItemField(column, random.choice(["Tax", "Tax: "])))
+
+        item_list.append(item)
+        total = 0
+
         for _ in range(random.randint(lower_bound, upper_bound)):
-            item_name = self.fake.ecommerce_name()
+            item = Item()
+            for column in columns:
 
-            item_price_float = float("{0:.2f}".format(random.uniform(2, 600)))
-            item_price = [f'{currency}{item_price_float}', f'{item_price_float}{currency}'][currency_in_front]
-            total = total + item_price_float
+                field = None
 
-            item_quantity = random.randint(1, 4)
-            item = Item(item_name, item_price, item_quantity)
+                if column == 'name':
+                    field = ItemField('name', self.fake.ecommerce_name())
+
+                if column == 'price':
+                    item_price_float = float("{0:.2f}".format(random.uniform(2, 50)))
+                    item_price = [f'{currency}{item_price_float}', f'{item_price_float}{currency}'][currency_in_front]
+                    total = total + item_price_float
+                    field = ItemField('price', item_price)
+
+                if column == 'quantity':
+                    field = ItemField('quantity', str(random.randint(1, 8)))
+
+                if column == 'article_number':
+                    field = ItemField('article_number', self.regex(r"\b\d{4,8}\b"))
+
+                if column == 'description':
+                    field = ItemField('description', self.fake.bs())
+
+                if column == 'tax':
+                    field = ItemField('tax', random.choice(['10%', '15%', '20%']))
+
+                item.add_field(field)
             item_list.append(item)
 
         total = "{:.2f}".format(total)
-        item_list.append(Item('total', [f'{currency}{total}', f'{total}{currency}'][currency_in_front], 0))
+        item = Item()
+        for i in range(len(columns)):
+            if i < len(columns) - 2:
+                item.add_field(ItemField(" ", " "))
+            if i == len(columns) - 2:
+                item.add_field(ItemField('total_description', random.choice(
+                        ["Total", "Total: ", "TOTAL", "TOTAL:", "Sum", "Sum:", "SUM", "SUM:"])))
+            if i == len(columns) - 1:
+                item.add_field(ItemField('total_value', [f'{currency}{total}', f'{total}{currency}'][currency_in_front]))
+        item_list.append(item)
         return item_list
 
     def custom(self, data: str):
@@ -127,6 +175,7 @@ class DataGenerator:
         self._buffer_logos = buffer_logos
         self.fake = Faker('en_US')
         self.fake.add_provider(pdf_generation.faker_commerce.Provider)
+        self.fake.add_provider(faker.providers.company)
         self.first_name = self.fake.first_name()
         self.last_name = self.fake.last_name()
         self.data_types = {}
