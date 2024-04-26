@@ -13,7 +13,6 @@ from pdf_generation import DataGenerator
 from pdf_generation.Annotation import Annotation, DataObject, Position
 from util.constants import *
 
-
 def fill_html(html, buffer_logos, gen_attr):
     data_generator = DataGenerator(buffer_logos)
     provided_types = data_generator.data_types
@@ -94,8 +93,11 @@ def fill_html(html, buffer_logos, gen_attr):
 
                     first_row = soup.new_tag("tr")
 
-                    for field in items[0].get_fields():
+                    col_widths = calc_widths(items)
+
+                    for index, field in enumerate(items[0].get_fields()):
                         th = soup.new_tag("th")
+                        th['style'] = f'width: {round(col_widths[index])}%'
                         th.append(create_tag(soup, "span", f'{str(elem["id"])}_header_{field.attribute}', field.value))
                         first_row.append(th)
 
@@ -140,7 +142,21 @@ def create_tag(soup, tag, tag_id, content):
         new_tag.string = content
         return new_tag
 
+def calc_widths(items):
+    counter = [0] * len(items[0].get_fields())
+    for item in items:
+        for index, field in enumerate(item.get_fields()):
+            counter[index] += len(field.value)
 
+    total = 0
+    counter = list(map(lambda c: c / len(items), counter))
+    total = sum(counter)
+
+    output = [0] * len(items[0].get_fields())
+    for index, c in enumerate(counter):
+        output[index] = c/total * 100
+
+    return counter
 def generate_table_styles(table, config):
     # Table background color:
     color_options = str(config['colors']).split(';')
@@ -153,7 +169,7 @@ def generate_table_styles(table, config):
     output = f'#{table["id"]} {{ width: {width}px;' \
              f'padding: {random.randint(int(config["minPadding"]), int(config["maxPadding"]))}px;' \
              f'font-size: {font_size}px;' \
-             f'text-align: right;' \
+             f'text-align: center;' \
              f'box-sizing: border-box;' \
              f'border-spacing: 0px;' \
              f'table-layout: fixed;}}' \

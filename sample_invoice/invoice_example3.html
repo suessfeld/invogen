@@ -1,8 +1,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Courier+Prime&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&display=swap" rel="stylesheet">
 
-<html data-fonts="Courier Prime;Special Elite" data-fontsize="15;18"
-      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#FAF9F6">
+<html data-fonts="hypermarket;fake-receipt;telidon" data-fontsize="15;18"
+      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF">
 <head>
     <meta charset="UTF-8">
     <meta name="pdfkit-page-height" content="2430px"/>
@@ -35,55 +35,85 @@
 
 <div id="line_top" data-position="200 2075 300 2100" data-type="custom" data-list="
 ---------------------------------------------------------------;---------------------------------------------------------------------------------------------------"></div>
-<div id="top-text1" data-position="50 2050 450 2075" data-type="custom" data-list="
-Thank you for your purchase!;
-Visit us again soon.;Earn points on every purchase;
-Enroll in our loyalty program today!;Did we meet your expectations?;
-Leave us a review on our site.;Exclusive deals for our newsletter subscribers.;
-Sign up now!; Save your receipt for returns or exchanges within 30 days.;
-Follow us on social media for updates;Check out our website;
-Exclusives and more online!; We're committed to sustainability;
-Learn how you can help on our website.; Join our community event next month;
-Keep your receipt!; Get a free gift next time; We value your feedback!;
-Tell us how we can improve.; Scan the QR code to get rewards
-Click & Collect at our store;
-Get inspiration at our website!;
-"></div>
-<div id="top-text2" data-position="50 2000 450 2050" data-type="custom" data-list="
-Thank you for your purchase!;
-Visit us again soon.;Earn points on every purchase;
-Enroll in our loyalty program today!;Did we meet your expectations?;
-Leave us a review on our site.;Exclusive deals for our newsletter subscribers.;
-Sign up now!; Save your receipt for returns or exchanges within 30 days.;
-Follow us on social media for updates;Check out our website;
-Exclusives and more online!; We're committed to sustainability;
-Learn how you can help on our website.; Join our community event next month;
-Keep your receipt!; Get a free gift next time; We value your feedback!;
-Tell us how we can improve.; Scan the QR code to get rewards
-Click & Collect at our store;
-Get inspiration at our website!;
-"></div>
-<table id="item_list" data-type="item_list" data-position="50 800 450 2000" data-config='
+<table data-position="50 1900 450 2075">
+    <tbody>
+    <tr>
+        <td><span></span>**************************************</td>
+    </tr>
+    <tr>
+        <td><span id="top-customer-card" data-type="custom" data-list="CUSTOMER CARD:; cust. card:">    </span>
+            <span id="top-customer-card-2" data-type="regex" data-regex="\d{4}\s\d{2}\-\-\s\-\-\-\-\s\-\-\-\-"></span></td>
+    </tr>
+    <tr>
+        <td><span></span>**************************************</td>
+    </tr>
+    <tr>
+        <td>
+            <span id="top-text1" data-type="custom" data-list="
+            Thank you for your purchase!;
+            Visit us again soon.;Earn points on every purchase;
+            Enroll in our loyalty program today!;Did we meet your expectations?;
+            Leave us a review on our site.;Exclusive deals for our newsletter subscribers.;
+            Sign up now!; Save your receipt for returns within 30 days.;
+            Follow us on social media for updates;Check out our website;
+            Exclusives and more online!; We're committed to sustainability;
+            Learn how you can help on our website.; Join our community event next month;
+            Keep your receipt!; Get a free gift next time; We value your feedback!;
+            Tell us how we can improve.; Scan the QR code to get rewards
+            Click & Collect at our store;
+            Get inspiration at our website!;
+            "></span>
+        </td>
+    </tr>
+    <tr>
+        <td><span></span>**************************************</td>
+    </tr>
+    <tr>
+        <td>
+            <span id="top-text2" data-type="custom" data-list="
+            Thank you for your purchase!;
+            Visit us again soon.;Earn points on every purchase;
+            Enroll in our loyalty program today!;Did we meet your expectations?;
+            Leave us a review on our site.;
+            Sign up now!; Save your receipt for returns within 30 days.;
+            Follow us on our social media;Check out our website;
+            Exclusives and more online!; We're committed to sustainability;
+            Learn how you can help on our website.; Join our community event next month;
+            Keep your receipt!; Get a free gift next time; We value your feedback!;
+            Tell us how we can improve.; Scan the QR code to get rewards
+            Click & Collect at our store;
+            Get inspiration at our website!;
+            "></span>
+        </td>
+    </tr>
+    <tr>
+        <td><span></span>**************************************</td>
+    </tr>
+    </tbody>
+</table>
+
+<table id="item_list" data-type="item_list" data-position="10 900 490 1900" data-config='
 {
-    "minWidth": 370,
-    "maxWidth": 420,
+    "minWidth": 420,
+    "maxWidth": 480,
     "minElems": 35,
     "maxElems": 45,
-    "minFontSize": 15,
-    "maxFontSize": 18,
+    "minFontSize": 13,
+    "maxFontSize": 15,
     "minPadding": 5,
     "maxPadding": 8,
-    "colors": "#d3d3d3;#FFFFFF;#FFFFFF"
+    "colors": "#FFFFFF",
+    "columns": "name;article_number;quantity;price"
 }
 '></table>
 
-<img id="qr-code" data-position="50 600 450 800"
+<img id="qr-code" data-position="50 700 450 900"
      src="https://upload.wikimedia.org/wikipedia/commons/0/0b/QR_code_Wikimedia_Commons_%28URL%29.png" data-config='
 {
     "height": "80;120"
 }
 '>
-<table data-position="50 400 450 600">
+<table data-position="50 500 450 700">
     <tr>
         <td><span>**********************************</span></td>
     </tr>
@@ -91,13 +121,17 @@ Get inspiration at our website!;
         <td>Date: <strong id="date" data-type="date"></strong></span></td>
     </tr>
     <tr>
-        <td><span>Nr: <strong id="invoice_number" data-type="regex" data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span></td>
+        <td><span>Nr: <strong id="invoice_number" data-type="regex"
+                              data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span></td>
     </tr>
     <tr>
-        <td><span>Payed With: <strong id="payed_with" data-type="custom" data-list="Mastercard;Visa;American Express"></strong></span></td>
+        <td><span>Payed With: <strong id="payed_with" data-type="custom"
+                                      data-list="Mastercard;Visa;American Express"></strong></span></td>
     </tr>
     <tr>
-        <td><span>Card Number: <strong id="card_number" data-type="regex" data-regex="^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$"></strong></span></td>
+        <td><span>Card Number: <strong id="card_number" data-type="regex"
+                                       data-regex="^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$"></strong></span>
+        </td>
     </tr>
     <tr>
         <td><span>Terminal: <strong id="Terminal ID" data-type="regex" data-regex="[0-9]{5,10}"></strong></span></td>
@@ -106,24 +140,26 @@ Get inspiration at our website!;
         <td><span>**********************************</span></td>
     </tr>
 </table>
-<div id="line_bottom" data-position="50 380 450 400" data-type="custom" data-list="
+<div id="line_bottom" data-position="50 480 450 500" data-type="custom" data-list="
 -----------------------------------------------------------;=====================================;
 "></div>
-<table data-position="50 280 250 380">
+<table data-position="50 380 250 480">
     <tr>
         <td><span data-type="custom" data-list="******************;=============;"></span></td>
     </tr>
     <tr>
-        <td><span id="customer_service" data-type="custom" data-list="customer service:;CALL US!;CUSTOMER SERVICE"></span></td>
+        <td><span id="customer_service" data-type="custom"
+                  data-list="customer service:;CALL US!;CUSTOMER SERVICE"></span></td>
     </tr>
     <tr>
-        <td><span><strong id="customer_service_phonenumber" data-type="regex" data-regex="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$"></strong></span></td>
+        <td><span><strong id="customer_service_phonenumber" data-type="regex"
+                          data-regex="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$"></strong></span></td>
     </tr>
     <tr>
         <td><span data-type="custom" data-list="******************;=============;"></span></td>
     </tr>
 </table>
-<table data-position="250 280 450 380">
+<table data-position="250 380 450 480">
     <tr>
         <td><span data-type="custom" data-list="******************;=============;"></span></td>
     </tr>
@@ -138,12 +174,14 @@ Get inspiration at our website!;
     </tr>
 </table>
 
-<div id="thanks-text" data-position="50 230 450 280" data-type="custom" data-list="
+<div id="thanks-text" data-position="50 330 450 380" data-type="custom" data-list="
 Thanks for making business with us!;Thank you!;If you have any questions please contact us!
 "></div>
-<img id="logo_bottom" data-position="150 100 350 230" data-type="logo" data-config='
+<img id="logo_bottom" data-position="150 250 350 330" data-type="logo" data-config='
 {
-    "width": "150;250"
+    "width": "70;100"
 }
 '>
+<img id="bar-code" data-position="150 50 350 200"
+     src="https://t3.ftcdn.net/jpg/05/45/08/48/360_F_545084870_i08uBRfhwsr9q9BGt3iGlokI0Dxg5anU.jpg">
 </html>

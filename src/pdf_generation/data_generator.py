@@ -107,27 +107,39 @@ class DataGenerator:
         item = Item()
 
         for column in columns:
+
+            if column == 'number':
+                item.add_field(ItemField(column, random.choice(["No.", "No.:"])))
+
             if column == 'name':
                 item.add_field(ItemField(column, random.choice(["Name", "Product: ", "Name:"])))
+
             if column == 'description':
                 item.add_field(ItemField(column, random.choice(["Description", "Desc.:", "Desc.", "Description:"])))
+
             if column == 'article_number':
-                item.add_field(ItemField(column, random.choice(["Article No.", "No.: ", "Article No.:"])))
+                item.add_field(ItemField(column, random.choice(["Art. No.", "No.: ", "Art. No.:"])))
+
             if column == 'price':
-                item.add_field(ItemField(column, random.choice(["Price", "Unit Price:", "Price:"])))
+                item.add_field(ItemField(column, random.choice(["Price","Price:"])))
+
             if column == 'quantity':
-                item.add_field(ItemField(column, random.choice(["Quantity", "Qty.:", "Quantity:", "Qty."])))
+                item.add_field(ItemField(column, random.choice(["Qty.:", "Qty."])))
+
             if column == 'tax':
                 item.add_field(ItemField(column, random.choice(["Tax", "Tax: "])))
 
         item_list.append(item)
         total = 0
 
-        for _ in range(random.randint(lower_bound, upper_bound)):
+        for i in range(random.randint(lower_bound, upper_bound)):
             item = Item()
             for column in columns:
 
                 field = None
+
+                if column == 'number':
+                    field = ItemField('number', i)
 
                 if column == 'name':
                     field = ItemField('name', self.fake.ecommerce_name())
@@ -155,12 +167,22 @@ class DataGenerator:
 
         total = "{:.2f}".format(total)
         item = Item()
+        has_sum = False
         for i in range(len(columns)):
             if i < len(columns) - 2:
-                item.add_field(ItemField(" ", " "))
+                if not has_sum:
+                    if random.randint(0, 100) < 50:
+                        item.add_field(ItemField('total_description', random.choice(
+                            ["Total", "Total: ", "TOTAL", "TOTAL:", "Sum", "Sum:", "SUM", "SUM:"])))
+                        has_sum = True
+                    else:
+                        item.add_field(ItemField(f"spacer{i}", ""))
+                else:
+                    item.add_field(ItemField(f"spacer{i}", ""))
+
             if i == len(columns) - 2:
-                item.add_field(ItemField('total_description', random.choice(
-                        ["Total", "Total: ", "TOTAL", "TOTAL:", "Sum", "Sum:", "SUM", "SUM:"])))
+                item.add_field(ItemField(f"spacer{i}", ""))
+
             if i == len(columns) - 1:
                 item.add_field(ItemField('total_value', [f'{currency}{total}', f'{total}{currency}'][currency_in_front]))
         item_list.append(item)
