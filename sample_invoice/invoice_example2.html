@@ -1,7 +1,7 @@
-<html data-fonts="preconnect;Syne Mono, monospace;Roboto Condensed" data-fontsize="36;43"
-      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#EDEADE;#F9F6EE;#FAF9F6">
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<html data-fonts="Open Sans;Rubik" data-fontsize="32;36"
+      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Rubik:ital,wght@0,300..900;1,300..900&family=Special+Elite&display=swap" rel="stylesheet">
+
 <head>
     <meta charset="UTF-8">
     <meta name="pdfkit-page-height" content="3508px"/>
@@ -12,7 +12,6 @@
     <meta name="pdfkit-margin-bottom" content="0px"/>
     <meta name="pdfkit-disable-smart-shrinking" content=""/>
     <meta name="pdfkit-debug-javascript" content=""/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
 
 <img id="logo" data-position="200 3200 800 3423" data-type="logo" data-config='
@@ -73,58 +72,61 @@ Invoice;Receipt;INVOICE; I n v o i c e; ;invoice;receipt"></h1>
         <td><span id="transaction_id" data-type="regex" data-regex="[0-9]{6,10}"></span></td>
     </tr>
 </table>
-<h2 id="subheader" data-position="100 2300 1500 2400" data-type="custom" data-list="
-SUBSUMMARY; summary; CHARGES"></h2>
-<table id="item_list" data-type="item_list" data-position="100 1700 2100 2300" data-config='
+<h2 id="subheader" data-position="1240 2200 1240 2300" data-type="custom" data-list="
+SUBSUMMARY; SUMMARY; CHARGES"></h2>
+<table id="item_list" data-type="item_list" data-position="50 1500 2400 2200" data-config='
 {
-    "minWidth": 1800,
-    "maxWidth": 2000,
+    "minWidth": 2200,
+    "maxWidth": 2300,
     "minElems": 8,
     "maxElems": 10,
-    "minFontSize": 30,
-    "maxFontSize": 40,
+    "minFontSize": 32,
+    "maxFontSize": 36,
     "minPadding": 10,
     "maxPadding": 20,
-    "colors": "#d3d3d3;#FFFFFF",
-    "columns": "name;article_number;quantity;tax;price"
+    "colors": "#ededed;#FFFFFF;#FFFFFF",
+    "columns": "name;description;article_number;quantity;tax;price"
 }
 '></table>
-<h2 id="additional_orders_1" data-position="50 1600 1200 1700" data-type="custom" data-list="
-Additional Orders; Extras:;EXTRAS:"></h2>
-<table id="item_list_2" data-type="item_list" data-position="50 1100 1200 1600" data-config='
+<h2 id="additional_orders_1" data-position="1240 1400 1240 1470" data-type="custom" data-list="
+ADDITIONAL;EXTRAS:"></h2>
+<table id="item_list_2" data-type="item_list" data-position="50 1000 2400 1400" data-config='
 {
-    "minWidth": 800,
-    "maxWidth": 950,
-    "minElems": 6,
-    "maxElems": 8,
-    "minFontSize": 20,
-    "maxFontSize": 30,
+    "minWidth": 2200,
+    "maxWidth": 2300,
+    "minElems": 3,
+    "maxElems": 5,
+    "minFontSize": 32,
+    "maxFontSize": 36,
     "minPadding": 10,
     "maxPadding": 20,
-    "colors": "#d3d3d3;#FFFFFF",
-    "columns": "name;quantity;price"
+    "colors": "#ededed;#FFFFFF;#FFFFFF",
+    "columns": "number;name;description;article_number;quantity;price"
 }
 '></table>
-<h2 id="additional_orders_2" data-position="1200 1600 2400 1700" data-type="custom" data-list="
-Additional Orders; Extras:;EXTRAS:"></h2>
-<table id="item_list_3" data-type="item_list" data-position="1200 1100 2400 1600" data-config='
-{
-   "minWidth": 800,
-    "maxWidth": 950,
-    "minElems": 4,
-    "maxElems": 6,
-    "minFontSize": 20,
-    "maxFontSize": 30,
-    "minPadding": 10,
-    "maxPadding": 20,
-    "colors": "#d3d3d3;#FFFFFF",
-    "columns": "name;quantity;price"
-}
-'></table>
-<img id="qr-code" data-position="300 400 800 700"
+<h2 data-position="1240 900 1240 970" data-type="custom" data-list="
+Payment Information:;Transaction Summary"></h2>
+<table id="payment-table" data-position="50 700 2400 900">
+    <tr>
+        <th><span id="item_list_header_name">Type</span></th>
+        <th><span id="item_list_header_description">Date</span></th>
+        <th><span id="item_list_header_article_number">Number</span></th>
+        <th><span id="item_list_header_tax">Method</span></th>
+        <th><span id="item_list_header_price">Description</span></th>
+    </tr>
+    <tr>
+        <td><span data-type="custom" data-list="ELECTRONIC;CASH"></span></td>
+        <td><span data-type="date"></span></td>
+        <td><span data-type="regex" data-regex="[A-Za-z]-\d{4,8}"></span></td>
+        <td><span data-type="custom" data-list="Credit Card; Debit Card; Cash"></span></td>
+        <td><span data-type="regex" data-regex="(MasterCard|VISA|AMEX)\*{14}\d{4}"></span></td>
+    </tr>
+
+</table>
+<img id="qr-code" data-position="300 200 800 500"
      src="https://upload.wikimedia.org/wikipedia/commons/0/0b/QR_code_Wikimedia_Commons_%28URL%29.png">
 
-<div data-position="900 400 2180 700" data-type="custom" data-list="
+<div data-position="900 300 2180 500" data-type="custom" data-list="
 Thanks for making business with us!;Thank you!;If you have any questions please contact us!;For inquiries contact us.;Payment is required within 14 business days;Payment is due within 10 days
 "></div>
 </html>

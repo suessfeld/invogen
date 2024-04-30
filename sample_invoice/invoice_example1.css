@@ -31,12 +31,16 @@ h1 {
     border: 1px solid black;
 }
 
-#item_list {
+#item_list, #item_list_2 {
     border:5px solid black;
     border-collapse: collapse;
 }
 
-#item_list td, #item_list th {
+#item_list td, #item_list th,  #item_list_2 td, #item_list_2 th {
     border: 1px solid black;
     text-align: center;
+}
+
+.page-1 {
+    page-break-after: always;
 }

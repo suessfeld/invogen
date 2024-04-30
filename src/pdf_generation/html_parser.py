@@ -146,7 +146,10 @@ def calc_widths(items):
     counter = [0] * len(items[0].get_fields())
     for item in items:
         for index, field in enumerate(item.get_fields()):
-            counter[index] += len(field.value)
+            if len(field.value) > 3:
+                counter[index] += len(field.value)
+            else:
+                counter[index] += 3
 
     total = 0
     counter = list(map(lambda c: c / len(items), counter))

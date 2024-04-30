@@ -18,10 +18,13 @@ Generates invoices with the specified params.
 Parses and validates arguments
 """
 @app.command()
-def generate(output: Optional[str] = None, amount: int = 0,
+def generate(output: str = typer.Option(..., "--output", "-o"),
+             amount: int = typer.Option(..., "--amount"),
+             input_html: str = typer.Option(..., "--input-html"),
+             input_css: str = typer.Option(..., "--input-css"),
              display_bounding_boxes: Optional[bool] = False,
              buffer_logos: Optional[bool] = False,
-             input_html: str = None, input_css: str = None):
+        ):
 
     gen_attr = pdf_generation.GenerationAttributes()
 

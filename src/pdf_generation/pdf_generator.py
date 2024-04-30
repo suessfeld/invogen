@@ -31,7 +31,11 @@ def generate_pdfs(gen_attr: GenerationAttributes):
     temp_path = gen_attr.temp_path
 
     if not os.path.exists(invoice_output_path):
-        os.mkdir(invoice_output_path)
+        try:
+            os.mkdir(invoice_output_path)
+        except FileNotFoundError:
+            print("Output path is invalid!")
+            sys.exit(-1)
 
     if not os.path.exists(annotation_output_path):
         os.mkdir(annotation_output_path)
@@ -63,12 +67,20 @@ def render(gen_attr: GenerationAttributes):
     if os.path.exists(gen_attr.temp_path + "invoice.html"):
         os.remove(gen_attr.temp_path + "invoice.html")
 
-    with open(gen_attr.temp_path + 'invoice.css', 'w', encoding="utf-8") as css_file, open(gen_attr.input_css, 'r') as input_file:
-        for line in input_file:
-            css_file.write(line)
+    try:
+        with open(gen_attr.temp_path + 'invoice.css', 'w', encoding="utf-8") as css_file, open(gen_attr.input_css, 'r') as input_file:
+            for line in input_file:
+                css_file.write(line)
+    except FileNotFoundError:
+        print("The specified CSS file does not exist.")
+        sys.exit(-1)
 
-    with open(gen_attr.input_html, encoding="utf-8") as html_file:
-        html_parser.fill_html(html_file, gen_attr.buffer_logos, gen_attr)
+    try:
+        with open(gen_attr.input_html, encoding="utf-8") as html_file:
+            html_parser.fill_html(html_file, gen_attr.buffer_logos, gen_attr)
+    except FileNotFoundError:
+        print("The specified HTML file does not exist.")
+        sys.exit(-1)
 
     if gen_attr.display_bounding_boxes:
         with open(gen_attr.input_html, encoding="utf-8") as html_file:

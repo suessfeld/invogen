@@ -1,5 +1,5 @@
 <html data-fonts="preconnect;Syne Mono, monospace;Roboto Condensed" data-fontsize="36;43"
-      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#EDEADE;#F9F6EE;#FAF9F6">
+      data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF;#FAF9F6;">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <head>
@@ -12,74 +12,149 @@
     <meta name="pdfkit-margin-bottom" content="0px"/>
     <meta name="pdfkit-disable-smart-shrinking" content=""/>
     <meta name="pdfkit-debug-javascript" content=""/>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 </head>
-
-<img id="logo" data-position="1260 3000 2277 3423" data-type="logo" data-config='
+<div class="page-1">
+    <img id="logo" data-position="1260 3000 2277 3423" data-type="logo" data-config='
 {
     "width": "300;400"
 }
 '>
 
-<table data-position="200 3000 1220 3423" id="billed_to_table">
-    <tr>
-        <td><strong><span id="billed_by_name" data-type="company"></span></strong></td>
-    </tr>
-    <tr>
-        <td><span id="billed_by_address" data-type="address"></span></td>
-    </tr>
-    <tr>
-        <td><span id="billed_by_infos" data-type="custom" data-list="Tax ID: ;tax id: ;tax number: ;TAX NUMBER: "></span>  <span id="tax_number" data-type="regex" data-regex="^[0-9]{3} [0-9]{2}/[0-9]{2}$"></span></td>
-    </tr>
-    <tr>
-        <td><span id="billed_by_email" data-type="email"></span></td>
-    </tr>
-    <tr>
-        <td><span data-type="custom" data-list="PHONE: ;phone: ;Contact:"></span><strong id="billed_by_phone" data-type="regex" data-regex="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$"></strong></td>
-    </tr>
-</table>
-<table data-position="100 2400 600 2750" id="sold_to_table">
-    <tr>
-        <td><strong data-type="custom" data-list="delivery address; ADDRESS; Customer Address; DELIVER TO:"></strong></td>
-    </tr>
-    <tr>
-        <td><span id="sold_to_address" data-type="address"></span></td>
-    </tr>
-</table>
-<table id="invoice_table" data-position="600 2400 2277 2750">
-    <tr>
-        <td><strong data-type="custom" data-list="Invoice;Bill"></strong></td><td></td>
-    </tr>
-    <tr>
-        <td><span>Nr: <strong id="invoice_number" data-type="regex" data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span>   </td>
-        <td><span data-type="custom" data-list="invoice date:;inv. date:;INVOICE DATE:"></span> <strong id="invoice_date" data-type="date"></strong>    </td>
-    </tr>
-    <tr>
-        <td><span>Payed With: <strong id="payed_with" data-type="custom" data-list="Mastercard;Visa;American Express"></strong></span>    </td>
-        <td><span data-type="custom" data-list="order date:;ord. date:;ORDER DATE:"></span> <strong id="order_date" data-type="date"></strong>  </td>
-    </tr>
-    <tr>
-        <td><span>Card Number: <strong id="card_number" data-type="regex" data-regex="^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$"></strong></span>   </td>
-        <td><span data-type="custom" data-list="shipping date:;ship. date:;shipping DATE:"></span>  <strong id="sent_date" data-type="date"></strong>    </td>
-    </tr>
-    <tr>
-        <td><span id="transaction" data-type="custom" data-list="transaction id; ID; Reference ID:"></span> </td>
-        <td><span id="transaction_id" data-type="regex" data-regex="[0-9]{6,10}"></span></td>   </td>
-    </tr>
-</table>
-<table id="item_list" data-type="item_list" data-position="100 200 2100 2400" data-config='
+    <table data-position="100 3000 600 3423" id="billed_to_table">
+        <tr>
+            <td><strong><span id="billed_by_name" data-type="company"></span></strong></td>
+        </tr>
+        <tr>
+            <td><span id="billed_by_address" data-type="address"></span></td>
+        </tr>
+        <tr>
+            <td><span id="billed_by_infos" data-type="custom"
+                      data-list="Tax ID: ;tax id: ;tax number: ;TAX NUMBER: "></span> <span id="tax_number"
+                                                                                            data-type="regex"
+                                                                                            data-regex="^[0-9]{3} [0-9]{2}/[0-9]{2}$"></span>
+            </td>
+        </tr>
+        <tr>
+            <td><span id="billed_by_email" data-type="email"></span></td>
+        </tr>
+        <tr>
+            <td><span data-type="custom" data-list="PHONE: ;phone: ;Contact:"></span><strong id="billed_by_phone"
+                                                                                             data-type="regex"
+                                                                                             data-regex="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$"></strong>
+            </td>
+        </tr>
+    </table>
+    <table data-position="100 2400 600 2750" id="sold_to_table">
+        <tr>
+            <td><strong data-type="custom"
+                        data-list="delivery address; ADDRESS; Customer Address; DELIVER TO:"></strong>
+            </td>
+        </tr>
+        <tr>
+            <td><span id="sold_to_address" data-type="address"></span></td>
+        </tr>
+    </table>
+    <table id="invoice_table" data-position="600 2400 2277 2750">
+        <tr>
+            <td><strong data-type="custom" data-list="Invoice;Bill"></strong></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><span>Nr: <strong id="invoice_number" data-type="regex"
+                                  data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span></td>
+            <td><span data-type="custom" data-list="invoice date:;inv. date:;INVOICE DATE:"></span> <strong
+                    id="invoice_date" data-type="date"></strong></td>
+        </tr>
+        <tr>
+            <td><span>Payed With: <strong id="payed_with" data-type="custom"
+                                          data-list="Mastercard;Visa;American Express"></strong></span></td>
+            <td><span data-type="custom" data-list="order date:;ord. date:;ORDER DATE:"></span> <strong id="order_date"
+                                                                                                        data-type="date"></strong>
+            </td>
+        </tr>
+        <tr>
+            <td><span>Card Number: <strong id="card_number" data-type="regex"
+                                           data-regex="^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}$"></strong></span>
+            </td>
+            <td><span data-type="custom" data-list="shipping date:;ship. date:;shipping DATE:"></span> <strong
+                    id="sent_date" data-type="date"></strong></td>
+        </tr>
+        <tr>
+            <td><span id="transaction" data-type="custom" data-list="transaction id; ID; Reference ID:"></span></td>
+            <td><span id="transaction_id" data-type="regex" data-regex="[0-9]{6,10}"></span></td>
+            </td>
+        </tr>
+    </table>
+    <table id="item_list" data-type="item_list" data-position="50 200 2350 2400" data-config='
 {
-    "minWidth": 1800,
-    "maxWidth": 2000,
+    "minWidth": 2000,
+    "maxWidth": 2300,
     "minElems": 20,
     "maxElems": 26,
     "minFontSize": 30,
     "maxFontSize": 40,
     "minPadding": 30,
     "maxPadding": 40,
-    "colors": "#d3d3d3;#FFFFFF"
+    "colors": "#d3d3d3;#FFFFFF",
+    "columns": "number;name;article_number;description;quantity;tax;price"
 }
 '></table>
+    <table style="text-align: center" data-position="1240 100 1240 180">
+        <tr>
+            <td><span style="text-align: center" data-type="custom" data-list="The manufacturer retains ownership of the goods until complete payment is received.;
+Ownership of the goods stays with the manufacturer until payment is complete.;
+The manufacturer holds ownership of the goods until full payment is received.;
+The goods are owned by the manufacturer until payment is made in full.;
+Ownership of the goods remains with the manufacturer until full payment has been received."></span></td>
+        </tr>
+        <tr>
+            <td><span style="text-align: center" data-type="regex"
+                      data-regex="\b[A-Z]{2}[0-9]{2}(?:[ ][0-9]{4}){4}(?!(?:[ ][0-9]){3})(?:[ ][0-9]{1,2})?\b"></span>
+            </td>
+        </tr>
+    </table>
 
-    <div data-position="1000 30 1280 100" data-type="custom" data-list="P. 1/1;1/1;Page 1/1; Page 1 of 1"></div>
+    <div data-position="1240 20 1240 90"><strong data-type="custom"
+                                                 data-list="1/2;Page 1 of 2"></strong>
+    </div>
+</div>
+<h2 id="additional_orders_1" data-position="1240 -300 1240 -200" data-type="custom" data-list="
+ADDITIONAL;EXTRAS:"></h2>
+<table id="item_list_2" data-type="item_list" data-position="50 -1000 2400 -300" data-config='
+{
+    "minWidth": 2200,
+    "maxWidth": 2300,
+    "minElems": 5,
+    "maxElems": 7,
+    "minFontSize": 30,
+    "maxFontSize": 40,
+    "minPadding": 30,
+    "maxPadding": 40,
+    "colors": "#d3d3d3;#FFFFFF",
+    "columns": "number;name;description;article_number;quantity;price"
+}
+'></table>
+<div data-position="1240 -1200 1240 -1080"><span data-type="custom" data-list="Thank you for your business!;
+Please remit payment at your earliest convenience.;
+We appreciate your prompt attention to this matter.;
+For any inquiries or concerns, please don't hesitate to contact us.;
+We look forward to serving you again in the future.;"></span></div>
+<table style="text-align: center" data-position="1240 -3418 1240 -3328">
+        <tr>
+            <td><span style="text-align: center" data-type="custom" data-list="The manufacturer retains ownership of the goods until complete payment is received.;
+Ownership of the goods stays with the manufacturer until payment is complete.;
+The manufacturer holds ownership of the goods until full payment is received.;
+The goods are owned by the manufacturer until payment is made in full.;
+Ownership of the goods remains with the manufacturer until full payment has been received."></span></td>
+        </tr>
+        <tr>
+            <td><span style="text-align: center" data-type="regex"
+                      data-regex="\b[A-Z]{2}[0-9]{2}(?:[ ][0-9]{4}){4}(?!(?:[ ][0-9]){3})(?:[ ][0-9]{1,2})?\b"></span>
+            </td>
+        </tr>
+    </table>
+<div data-position="1240 -3488 1240 -3418"><strong data-type="custom" data-list="2/2;Page 2 of 2"></strong></div>
+
+<meta name="pdfkit-page-height" content="3508px"/>
+<meta name="pdfkit-page-width" content="2480px"/>
 </html>

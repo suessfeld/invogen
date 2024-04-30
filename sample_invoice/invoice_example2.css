@@ -16,3 +16,12 @@
 h2 {
  font-size: 50px;
 }
+
+#payment-table {
+ width: 2000px;
+}
+
+#payment-table td {
+    padding: 10px 10px; /* Adjust the values as needed */
+}
+
