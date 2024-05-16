@@ -40,10 +40,10 @@ def fill_html(html, buffer_logos, gen_attr):
                         continue
 
                     # Table background color:
-                    widths = str(config['width']).split(';')
+                    heights = str(config['width']).split(';')
 
                     elem['src'] = provided_types[data_type]()
-                    elem['style'] = f'width:{random.randint(int(widths[0]), int(widths[1]))}px'
+                    elem['style'] = f'width:{random.randint(int(heights[0]), int(heights[1]))}px'
 
                 elif data_type == 'custom':
                     elem.string = provided_types[data_type](elem['data-list'])
@@ -120,13 +120,36 @@ def fill_html(html, buffer_logos, gen_attr):
                     with open(gen_attr.temp_path + 'invoice.css', 'a', encoding="utf-8") as f:
                         f.write(generate_table_styles(elem, config))
 
+                elif data_type == 'qr_code_invoice':
+                    config = json.loads(elem['data-config'])
+
+                    # validate options
+                    viable_options = {'height'}
+                    config_keys = set(config.keys())
+                    extra_keys = config_keys - viable_options
+                    if extra_keys:
+                        logging.error(f"Table has invalid options: {extra_keys}")
+                        continue
+
+                    # Table background color:
+                    heights = str(config['height']).split(';')
+
+                    elem['src'] = provided_types[data_type](gen_attr.temp_path)
+                    elem['style'] = f'height:{random.randint(int(heights[0]), int(heights[1]))}px'
+
+                elif data_type == 'qr_code_url':
+                    elem['src'] = provided_types[data_type](gen_attr.temp_path)
+                    elem['style'] = f'height:{random.randint(int(heights[0]), int(heights[1]))}px'
+
                 else:
                     output = provided_types[data_type]()
-                    elem.string = output
+                    elem['src'] = output
 
             except KeyError as e:
-                logging.error(f'Data type {elem.attrs["data-type"]} is unknown! This field will not be filled.')
-                logging.error(e)
+                logging.error(f'Generation of type {elem.attrs["data-type"]} failed!'
+                              f'Check if this type is correctly defined.'
+                              f'[error: {e}]')
+
 
     with open(gen_attr.temp_path + 'invoice.html', 'w', encoding="utf-8") as f:
         f.write(str(soup))
