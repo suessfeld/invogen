@@ -15,6 +15,11 @@
     <meta name="pdfkit-debug-javascript" content=""/>
 </head>
 
+<img id="logo" data-position="150 2250 350 2350" data-type="logo" data-config='
+{
+    "width": "150;250"
+}
+'>
 
 <table data-position="100 2100 400 2171">
     <tbody>
@@ -112,11 +117,13 @@
         <td><span>**********************************</span></td>
     </tr>
     <tr>
-        <td>Date: <strong id="date" data-type="date"></strong></span></td>
+        <td>Date: <strong id="date" data-type="invoice_date_natural"></strong></td>
     </tr>
     <tr>
-        <td><span>Nr: <strong id="invoice_number" data-type="regex"
-                              data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span></td>
+        <td>Time: <strong id="timestamp" data-type="invoice_timestamp"></strong></td>
+    </tr>
+    <tr>
+        <td><span>Nr: <strong id="invoice_number" data-type="invoice_number"></strong></span></td>
     </tr>
     <tr>
         <td><span>Payed With: <strong id="payed_with" data-type="custom"
@@ -128,7 +135,7 @@
         </td>
     </tr>
     <tr>
-        <td><span>Terminal: <strong id="Terminal ID" data-type="regex" data-regex="[0-9]{5,10}"></strong></span></td>
+        <td><span>Terminal: <strong id="Terminal ID" data-type="invoice_register_number"></strong></span></td>
     </tr>
     <tr>
         <td><span>**********************************</span></td>
@@ -172,6 +179,9 @@
 Thanks for making business with us!;Thank you!;If you have any questions please contact us!
 "></div>
 
+<div id="check-us-out-text" data-position="245 220 255 250" data-type="custom" data-list="
+Check out our website:;Check out our homepage!;More information:
+"></div>
 <img id="qr-code-url" data-position="150 50 350 200"
      data-type="qr_code_url" data-config='
 {

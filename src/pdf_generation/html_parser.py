@@ -143,7 +143,7 @@ def fill_html(html, buffer_logos, gen_attr):
 
                 else:
                     output = provided_types[data_type]()
-                    elem['src'] = output
+                    elem.string = output
 
             except KeyError as e:
                 logging.error(f'Generation of type {elem.attrs["data-type"]} failed!'

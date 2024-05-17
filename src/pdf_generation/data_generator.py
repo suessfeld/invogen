@@ -11,6 +11,7 @@ import rstr
 
 from faker import Faker
 from faker.providers import company
+from schwifty import IBAN
 
 import pdf_generation
 import util.constants
@@ -18,6 +19,19 @@ from pdf_generation.Item import Item, ItemField
 from pdf_generation.Address import Address
 from util.constants import LOGO_API_KEY, LOGO_API_URL
 
+
+def static(method):
+    method_name = method.__name__
+
+    def wrapper(self, *args, **kwargs):
+
+        if method_name in self.invoice_information:
+            return self.invoice_information[method_name]
+        else:
+            self.invoice_information[method_name] = method(self, *args, **kwargs)
+            return self.invoice_information[method_name]
+
+    return wrapper
 
 class DataGenerator:
     # singleton instance
@@ -29,14 +43,13 @@ class DataGenerator:
 
     invoice_information = {}
 
+    @static
     def email(self):
-        return self.invoice_information['invoice_email']
+        return f"{self.first_name}.{self.last_name}@{self.fake.domain_name()}"
 
+    @static
     def client_name(self):
         return self.first_name + " " + self.last_name
-
-    def invoice_number(self):
-        return self.invoice_information['invoice_number']
 
     def regex(self, regex):
         return rstr.xeger(regex)
@@ -55,11 +68,30 @@ class DataGenerator:
         elif rand == 4:
             return f"{calendar.month_abbr[date.month]} {date.day}, {date.year}"
 
+    @static
     def invoice_date(self):
-        return self.invoice_information['invoice_date']
+        return self.fake.date_this_century()
 
+    def invoice_date_natural(self):
+        date = self.invoice_date()
+        rand = random.randint(0, 4)
+        if rand == 0:
+            return f"{date.day}.{date.month}.{date.year}"
+        elif rand == 1:
+            return f"{date.day}/{date.month}/{str(date.year)[len(str(date.year)) - 2:]}"
+        elif rand == 2:
+            return f"{date.year}-{date.month}-{date.day}"
+        elif rand == 3:
+            return f"{calendar.month_name[date.month]} {date.day}, {date.year}"
+        elif rand == 4:
+            return f"{calendar.month_abbr[date.month]} {date.day}, {date.year}"
+
+    def invoice_date_iso(self):
+        return self.invoice_date().isoformat()
+
+    @static
     def invoice_timestamp(self):
-        return self.invoice_information['invoice_timestamp']
+        return self.fake.time()
 
     def address(self):
         return Address(self.fake.street_name(),
@@ -68,8 +100,9 @@ class DataGenerator:
                        self.fake.postcode(),
                        self.fake.country())
 
+    @static
     def company(self):
-        return self.invoice_information['invoice_company']
+        return self.fake.company()
 
     def logo(self):
 
@@ -262,9 +295,9 @@ class DataGenerator:
         )
 
         algorithm_type = random.choice(["R1-AT0", "R1-AT1", "R1-AT2"])
-        register_number = self.invoice_information['invoice_register_number']
-        invoice_number = self.invoice_information['invoice_number']
-        invoice_timestamp = self.invoice_information['invoice_date'] + 'T' + self.invoice_information['invoice_time']
+        register_number = self.invoice_register_number()
+        invoice_number = self.invoice_number()
+        invoice_timestamp = self.invoice_date_iso() + 'T' + self.invoice_timestamp()
         invoice_mintax = self.invoice_information['invoice_mintax']
         invoice_midtax = self.invoice_information['invoice_midtax']
         invoice_maxtax = self.invoice_information['invoice_maxtax']
@@ -296,6 +329,7 @@ class DataGenerator:
         qr.make_image(fill_color="black", back_color="white").save(path + "qrcode.png")
         return path + "qrcode.png"
 
+    @static
     def qr_code_url(self, path):
         qr = qrcode.QRCode(
             version=1,
@@ -303,44 +337,32 @@ class DataGenerator:
             box_size=10,
             border=4,
         )
-        qr.add_data(self.invoice_information['invoice_url'])
+        qr.add_data(self.url())
         qr.make(fit=True)
 
         qr.make_image(fill_color="black", back_color="white").save(path + "qrcode_url.png")
         return path + "qrcode_url.png"
 
-        # see https://de.wikipedia.org/wiki/Internationale_Bankkontonummer for more information
+    @static
+    def url(self):
+        return self.fake.url()
 
-    def iban(self):
-        country_code = random.choice(self.country_codes)
-        bank_code = rstr.xeger(r'\d{5,8}')
-        account_number = rstr.xeger(r'\d{11,21}')
+    # see https://de.wikipedia.org/wiki/Internationale_Bankkontonummer for more information
+    @static
+    def invoice_iban(self):
+        return IBAN.random()
 
-        rearranged_iban = bank_code + account_number + country_code + '00'
+    @static
+    def invoice_register_number(self):
+        return self.regex(r'\d{4,7}')
 
-        numeric_iban = ''
-        for char in rearranged_iban:
-            if char.isdigit():
-                numeric_iban += char
-            else:
-                numeric_iban += str(10 + ord(char.upper()) - ord('A'))
+    @static
+    def invoice_number(self):
+        return self.regex(r'\d{10,20}')
 
-        iban_int = int(numeric_iban)
-        check_digits = 98 - (iban_int % 97)
-        check_digits_str = str(check_digits).zfill(2)
-        final_iban = country_code + check_digits_str + bank_code + account_number
-
-        return final_iban
-
-    def define_constants(self):
-        self.invoice_information['invoice_email'] = f"{self.first_name}.{self.last_name}@{self.fake.domain_name()}"
-        self.invoice_information['invoice_number'] = rstr.xeger(r'\d{5,20}')
-        self.invoice_information['invoice_register_number'] = rstr.xeger(r'\d{4,7}')
-        self.invoice_information['invoice_company'] = self.fake.company()
-        self.invoice_information['invoice_date'] = self.fake.date()
-        self.invoice_information['invoice_time'] = self.fake.time()
-        self.invoice_information['invoice_iban'] = self.iban()
-        self.invoice_information['invoice_url'] = self.fake.url()
+    @static
+    def invoice_email(self):
+        return self.email()
 
     def __init__(self, buffer_logos):
         self._buffer_logos = buffer_logos
@@ -353,8 +375,6 @@ class DataGenerator:
         for name, method in inspect.getmembers(self, predicate=inspect.ismethod):
             if not name.startswith('__') and not name.startswith('_'):
                 self.data_types[name] = method
-
-        self.define_constants()
 
     def __new__(cls, buffer_logos=None):
         if cls._instance is None:
@@ -380,3 +400,10 @@ class DataGenerator:
         'TO', 'TT', 'TN', 'TR', 'TM', 'TV', 'UG', 'UA', 'AE', 'GB', 'US', 'UY', 'UZ', 'VU', 'VA',
         'VE', 'VN', 'YE', 'ZM', 'ZW'
     ]
+
+    country_codes_eu = [
+        'BE', 'EL', 'LT', 'PT', 'BG', 'ES', 'LU', 'RO', 'CZ', 'FR', 'HU', 'SI', 'DK', 'HR', 'MT', 'SK', 'DE', 'IT',
+        'NL',
+        'FI', 'EE', 'CY', 'AT', 'SE', 'IE', 'LV', 'PL', 'IS', 'NO', 'LI', 'CH', 'BA', 'ME', 'MD', 'MK', 'GE', 'AL',
+        'RS',
+        'TR', 'UA']
