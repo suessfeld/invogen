@@ -347,11 +347,6 @@ class DataGenerator:
     def url(self):
         return self.fake.url()
 
-    # see https://de.wikipedia.org/wiki/Internationale_Bankkontonummer for more information
-    @static
-    def invoice_iban(self):
-        return IBAN.random()
-
     @static
     def invoice_register_number(self):
         return self.regex(r'\d{4,7}')
@@ -363,6 +358,11 @@ class DataGenerator:
     @static
     def invoice_email(self):
         return self.email()
+
+    # see https://en.wikipedia.org/wiki/International_Bank_Account_Number for more information
+    @static
+    def invoice_iban(self):
+            return IBAN.random()
 
     def __init__(self, buffer_logos):
         self._buffer_logos = buffer_logos
@@ -382,28 +382,3 @@ class DataGenerator:
             cls._init_params = {'buffer_logos': buffer_logos}
             cls._instance = super(DataGenerator, cls).__new__(cls)
         return cls._instance
-
-    country_codes = [
-        'AF', 'AL', 'DZ', 'AS', 'AD', 'AO', 'AI', 'AQ', 'AG', 'AR', 'AM', 'AW', 'AU', 'AT', 'AZ',
-        'BS', 'BH', 'BD', 'BB', 'BY', 'BE', 'BZ', 'BJ', 'BM', 'BT', 'BO', 'BQ', 'BA', 'BW', 'BR',
-        'BN', 'BG', 'BF', 'BI', 'CV', 'KH', 'CM', 'CA', 'KY', 'CF', 'TD', 'CL', 'CN', 'CO', 'KM',
-        'CG', 'CD', 'CR', 'CI', 'HR', 'CU', 'CW', 'CY', 'CZ', 'DK', 'DJ', 'DM', 'DO', 'EC', 'EG',
-        'SV', 'GQ', 'ER', 'EE', 'SZ', 'ET', 'FJ', 'FI', 'FR', 'GA', 'GM', 'GE', 'DE', 'GH', 'GI',
-        'GR', 'GL', 'GD', 'GU', 'GT', 'GN', 'GW', 'GY', 'HT', 'HN', 'HK', 'HU', 'IS', 'IN', 'ID',
-        'IR', 'IQ', 'IE', 'IL', 'IT', 'JM', 'JP', 'JO', 'KZ', 'KE', 'KI', 'KP', 'KR', 'KW', 'KG',
-        'LA', 'LV', 'LB', 'LS', 'LR', 'LY', 'LI', 'LT', 'LU', 'MO', 'MG', 'MW', 'MY', 'MV', 'ML',
-        'MT', 'MH', 'MR', 'MU', 'MX', 'FM', 'MD', 'MC', 'MN', 'ME', 'MS', 'MA', 'MZ', 'MM', 'NA',
-        'NR', 'NP', 'NL', 'NZ', 'NI', 'NE', 'NG', 'NU', 'NF', 'MK', 'MP', 'NO', 'OM', 'PK', 'PW',
-        'PS', 'PA', 'PG', 'PY', 'PE', 'PH', 'PL', 'PT', 'PR', 'QA', 'RO', 'RU', 'RW', 'KN', 'LC',
-        'VC', 'WS', 'SM', 'ST', 'SA', 'SN', 'RS', 'SC', 'SL', 'SG', 'SX', 'SK', 'SI', 'SB', 'SO',
-        'ZA', 'SS', 'ES', 'LK', 'SD', 'SR', 'SE', 'CH', 'SY', 'TW', 'TJ', 'TZ', 'TH', 'TL', 'TG',
-        'TO', 'TT', 'TN', 'TR', 'TM', 'TV', 'UG', 'UA', 'AE', 'GB', 'US', 'UY', 'UZ', 'VU', 'VA',
-        'VE', 'VN', 'YE', 'ZM', 'ZW'
-    ]
-
-    country_codes_eu = [
-        'BE', 'EL', 'LT', 'PT', 'BG', 'ES', 'LU', 'RO', 'CZ', 'FR', 'HU', 'SI', 'DK', 'HR', 'MT', 'SK', 'DE', 'IT',
-        'NL',
-        'FI', 'EE', 'CY', 'AT', 'SE', 'IE', 'LV', 'PL', 'IS', 'NO', 'LI', 'CH', 'BA', 'ME', 'MD', 'MK', 'GE', 'AL',
-        'RS',
-        'TR', 'UA']

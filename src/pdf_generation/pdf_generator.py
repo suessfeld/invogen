@@ -67,7 +67,7 @@ def generate_pdfs(gen_attr: GenerationAttributes):
         logging.error(e)
 
     finally:
-        with codecs.open(annotation_output_path + "~label-studio-import.json", "w", encoding="utf-8") as file:
+        with codecs.open(annotation_output_path + "~label_studio_import.json", "w", encoding="utf-8") as file:
             jsonpickle.set_encoder_options('json', ensure_ascii=False)
             file.write(jsonpickle.encode(global_annotation_object, unpicklable=False, max_depth=10))
 
@@ -75,7 +75,6 @@ def generate_pdfs(gen_attr: GenerationAttributes):
 """
 Renders a single PDF document from html and css templates. 
 """
-
 
 def render(gen_attr: GenerationAttributes, global_annotation_object: []):
     if os.path.exists(gen_attr.temp_path + "invoice.css"):
