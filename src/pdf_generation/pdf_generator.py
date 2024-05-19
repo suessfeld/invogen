@@ -47,24 +47,24 @@ def generate_pdfs(gen_attr: GenerationAttributes):
 
     global_annotation_object = []
     try:
+        elapsed_start = time.time()
+
         for i in range(gen_attr.amount):
             start = time.time()
             gen_attr.invoice_output_path = invoice_output_path
-            gen_attr.invoice_output_path = invoice_output_path + DEFAULT_OUTPUT_NAME + str(i) + ".pdf"
+            gen_attr.invoice_output_path = invoice_output_path + DEFAULT_OUTPUT_NAME + str(i + 1) + ".pdf"
 
             gen_attr.annotation_output_path = annotation_output_path
-            gen_attr.annotation_output_path = annotation_output_path + DEFAULT_OUTPUT_NAME + str(i) + ".json"
+            gen_attr.annotation_output_path = annotation_output_path + DEFAULT_OUTPUT_NAME + str(i + 1) + ".json"
             render(gen_attr, global_annotation_object)
-            start_conversion = time.time()
             pdf_to_jpg(gen_attr.invoice_output_path)
-            end_conversion = time.time()
             end = time.time()
-            logging.info(f'Generated {gen_attr.invoice_output_path} in {round(end - start, 2)}seconds'
-                         f' (jpg conversion took {round(end_conversion - start_conversion, 2)}s).')
+            logging.info(f'\n[{i + 1}/{gen_attr.amount}] Generated {gen_attr.invoice_output_path} in {round(end - start, 2)} seconds.'
+                         f'\n[{i + 1}/{gen_attr.amount}] Estimated reminder: {round((time.time() - elapsed_start) / (i + 1) * gen_attr.amount - (time.time() - elapsed_start), 2)} seconds')
 
     except Exception as e:
         logging.error("An exception was encountered during generation. Progress is saved.")
-        logging.info(e)
+        logging.error(e)
 
     finally:
         with codecs.open(annotation_output_path + "~label-studio-import.json", "w", encoding="utf-8") as file:
