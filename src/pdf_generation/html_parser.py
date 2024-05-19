@@ -4,13 +4,12 @@ import logging
 import os
 import random
 import re
-import string
 
 import jsonpickle
 from bs4 import BeautifulSoup
 
 from pdf_generation import DataGenerator
-from pdf_generation.Annotation import Annotation, DataObject, Position
+from pdf_generation.Annotation import Annotation, AnnotationObject, AnnotationValue, AnnotationResult
 from util.constants import *
 
 def fill_html(html, buffer_logos, gen_attr):
@@ -150,7 +149,6 @@ def fill_html(html, buffer_logos, gen_attr):
                               f'Check if this type is correctly defined.'
                               f'[error: {e}]')
 
-
     with open(gen_attr.temp_path + 'invoice.html', 'w', encoding="utf-8") as f:
         f.write(str(soup))
 
@@ -255,23 +253,68 @@ Extracts position information from the html file
 """
 
 
-def extract_and_save_information(buf, annotation_output_path):
-    annotation_object = Annotation()
-    with codecs.open(annotation_output_path, "w", encoding="utf-8") as file:
-        string = buf.getvalue()
-        matches = re.findall("position-absolute;.+;[0-9]+;[0-9]+;[0-9]+;[0-9]+;.+;", string)
+def to_percentage(small, big, invert):
+    percentage = (float(small) / float(big)) * 100
+
+    if invert:
+        return 100 - percentage
+    else:
+        return percentage
+
+
+def extract_and_save_information(buf, gen_attr, global_annotation_object: [], html):
+    
+    soup = BeautifulSoup(html, 'html.parser')
+    height = soup.find('meta', attrs={'name': 'pdfkit-page-height'})['content']
+    width = soup.find('meta', attrs={'name': 'pdfkit-page-width'})['content']
+
+    # Remove the 'px' suffix and convert to integers
+    height = int(height.replace('px', ''))
+    width = int(width.replace('px', ''))
+
+    annotation = Annotation()
+
+    # set relative path
+    annotation.data['image'] = \
+        "/data/local-files/?d=" + gen_attr.invoice_output_path.replace("pdf", "jpg")
+
+    with codecs.open(gen_attr.annotation_output_path, "w", encoding="utf-8") as file:
+        line = buf.getvalue()
+        matches = re.findall('position-absolute;[^;]*;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[^;]*;', line)
+
+        annotation_object = AnnotationObject()
+        annotation_object.ground_truth = False
+        annotation_object.result = []
 
         for m in matches:
             string_arr = m.split(';')
-            annotation_object.data[string_arr[1]] = DataObject()
-            annotation_object.data[string_arr[1]].position = Position(string_arr[2], string_arr[3],
-                                                                      string_arr[4], string_arr[5])
-            annotation_object.data[string_arr[1]].value = string_arr[6]
 
+            annotation_result = AnnotationResult()
+            annotation_value = AnnotationValue()
+
+            annotation_result.type = "rectanglelabels"
+            annotation_result.id = string_arr[1]
+            annotation_result.to_name = "image"
+            annotation_result.from_name = "label"
+            annotation_result.image_rotation = 0
+            annotation_result.original_width = width
+            annotation_result.original_height = height
+
+            annotation_value.x = to_percentage(string_arr[2], width, False)
+            annotation_value.y = to_percentage(string_arr[5], height, True)
+            annotation_value.width = to_percentage(abs(float(string_arr[4]) - float(string_arr[2])), width, False)
+            annotation_value.height = to_percentage(abs(float(string_arr[5]) - float(string_arr[3])), height, False)
+            annotation_value.rotation = 0
+            annotation_value.rectanglelabels = [string_arr[6]]
+
+            annotation_result.value = annotation_value
+            annotation_object.result.append(annotation_result)
+
+        annotation.annotations.append(annotation_object)
+        global_annotation_object.append(annotation)
         # Ensure correct utf-8 encoding
         jsonpickle.set_encoder_options('json', ensure_ascii=False)
-        file.write(jsonpickle.encode(annotation_object, unpicklable=False, max_depth=10))
-
+        file.write(jsonpickle.encode(annotation, unpicklable=False, max_depth=10))
 
 """
 Reads in the JS-Script file and appends the script to the html file.

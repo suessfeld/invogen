@@ -33,9 +33,9 @@ def generate(output: str = typer.Option(..., "--output", "-o"),
         gen_attr.annotation_output_path = DEFAULT_ANNOTATION_OUTPUT_PATH
         gen_attr.temp_path = DEFAULT_TMP_PATH
     else:
-        gen_attr.invoice_output_path = output + "/invoices/"
-        gen_attr.annotation_output_path = output + "/annotation_data/"
-        gen_attr.temp_path = output + "/temp/"
+        gen_attr.invoice_output_path = output + "\\invoices\\"
+        gen_attr.annotation_output_path = output + "\\annotation_data\\"
+        gen_attr.temp_path = output + "\\temp\\"
 
     gen_attr.display_bounding_boxes = display_bounding_boxes
     gen_attr.buffer_logos = buffer_logos
