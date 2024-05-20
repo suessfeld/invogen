@@ -54,6 +54,11 @@ class DataGenerator:
     def regex(self, regex):
         return rstr.xeger(regex)
 
+    def custom(self, data: str):
+        strings = data.split(';')
+        choice = random.choice(strings)
+        return choice
+
     def date(self):
         date = self.fake.date_this_century()
         rand = random.randint(0, 4)
@@ -281,11 +286,7 @@ class DataGenerator:
         item_list.append(item)
         return item_list
 
-    def custom(self, data: str):
-        strings = data.split(';')
-        choice = random.choice(strings)
-        return choice
-
+    @static
     def qr_code_invoice(self, path):
         qr = qrcode.QRCode(
             version=1,
