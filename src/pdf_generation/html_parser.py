@@ -133,13 +133,26 @@ def fill_html(html, buffer_logos, gen_attr):
                         logging.error(f"Table has invalid options: {extra_keys}")
                         continue
 
-                    # Table background color:
+                    # Table heights
                     heights = str(config['height']).split(';')
 
                     elem['src'] = provided_types[data_type](gen_attr.temp_path)
                     elem['style'] = f'height:{random.randint(int(heights[0]), int(heights[1]))}px'
 
                 elif data_type == 'qr_code_url':
+                    config = json.loads(elem['data-config'])
+
+                    # validate options
+                    viable_options = {'height'}
+                    config_keys = set(config.keys())
+                    extra_keys = config_keys - viable_options
+                    if extra_keys:
+                        logging.error(f"Table has invalid options: {extra_keys}")
+                        continue
+
+                    # Table heights
+                    heights = str(config['height']).split(';')
+
                     elem['src'] = provided_types[data_type](gen_attr.temp_path)
                     elem['style'] = f'height:{random.randint(int(heights[0]), int(heights[1]))}px'
 
@@ -155,6 +168,7 @@ def fill_html(html, buffer_logos, gen_attr):
     with open(gen_attr.temp_path + 'invoice.html', 'w', encoding="utf-8") as f:
         f.write(str(soup))
 
+    data_generator.invoice_information = {}
 
 def create_tag(soup, tag, tag_id, content):
     if tag_id is None:
