@@ -5,3 +5,7 @@ pdfkit~=1.0.0
 Faker~=19.6.1
 requests~=2.31.0
 rstr~=3.2.2
+bs4~=0.0.2
+schwifty~=2024.5.3
+PyMuPdf~=1.24.4
+qrcode~=7.4.2

@@ -1,10 +1,3 @@
-# BUILD IMAGE WITH
-# docker build -t invogen-app .
-#
-# RUN CONTAINER WITH
-# docker run -v "C:/Users/evoil/PycharmProjects/invogen/sample_invoice:/input" -v "C:/Users/evoil/Documents/output:/output"
-# invogen-app python ./src/invogen.py --input-html /input/invoice_example2.html --input-css /input/invoice_example2.css --output /output --amount 10
-
 FROM python:3.9-buster
 
 WORKDIR /usr/src/app

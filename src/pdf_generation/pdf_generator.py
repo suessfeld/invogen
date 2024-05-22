@@ -8,12 +8,12 @@ import sys
 import time
 from contextlib import redirect_stdout
 
+import fitz
 import pdfkit
 
 import jsonpickle
 
 from bs4 import BeautifulSoup
-from fitz_new import fitz
 
 from pdf_generation import html_parser
 from pdf_generation.Annotation import *
@@ -30,6 +30,7 @@ The output name is specified in constants.py.
 def generate_pdfs(gen_attr: GenerationAttributes):
     invoice_output_path = gen_attr.invoice_output_path
     annotation_output_path = gen_attr.annotation_output_path
+    label_studio_project_root = gen_attr.label_studio_project_root
     temp_path = gen_attr.temp_path
 
     if not os.path.exists(invoice_output_path):
@@ -56,6 +57,9 @@ def generate_pdfs(gen_attr: GenerationAttributes):
 
             gen_attr.annotation_output_path = annotation_output_path
             gen_attr.annotation_output_path = annotation_output_path + DEFAULT_OUTPUT_NAME + str(i + 1) + ".json"
+
+            gen_attr.label_studio_project_root = label_studio_project_root + "\\invoices\\" + DEFAULT_OUTPUT_NAME + str(i + 1) + ".jpg"
+
             render(gen_attr, global_annotation_object)
             pdf_to_jpg(gen_attr.invoice_output_path)
             end = time.time()
@@ -109,7 +113,7 @@ def render(gen_attr: GenerationAttributes, global_annotation_object: []):
 
     config = None
     if platform.system() == 'Windows':
-        config = pdfkit.configuration(wkhtmltopdf="C:\\Program Files\\wkhtmltopdf\\bin\\wkhtmltopdf.exe")
+        config = pdfkit.configuration(wkhtmltopdf=DEFAULT_WKTHMLTOPDF_PATH)
     else:
         config = pdfkit.configuration(wkhtmltopdf='/usr/local/bin/wkhtmltopdf')
 

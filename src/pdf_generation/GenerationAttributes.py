@@ -10,6 +10,7 @@ class GenerationAttributes:
     temp_path: str
     display_bounding_boxes: bool
     buffer_logos: bool
+    label_studio_project_root: str
 
 class BoundingBox:
     def __init__(self, x1, y1, x2, y2):

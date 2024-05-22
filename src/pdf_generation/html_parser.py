@@ -2,6 +2,7 @@ import codecs
 import json
 import logging
 import os
+import platform
 import random
 import re
 
@@ -11,6 +12,7 @@ from bs4 import BeautifulSoup
 from pdf_generation import DataGenerator
 from pdf_generation.Annotation import Annotation, AnnotationObject, AnnotationValue, AnnotationResult
 from util.constants import *
+
 
 def fill_html(html, buffer_logos, gen_attr):
     data_generator = DataGenerator(buffer_logos)
@@ -88,7 +90,8 @@ def fill_html(html, buffer_logos, gen_attr):
                         logging.error(f"Table has invalid options: {extra_keys}")
                         continue
 
-                    items = provided_types[data_type](config['minElems'], config['maxElems'], str(config['columns']).split(';'))
+                    items = provided_types[data_type](config['minElems'], config['maxElems'],
+                                                      str(config['columns']).split(';'))
 
                     first_row = soup.new_tag("tr")
 
@@ -163,6 +166,7 @@ def create_tag(soup, tag, tag_id, content):
         new_tag.string = content
         return new_tag
 
+
 def calc_widths(items):
     counter = [0] * len(items[0].get_fields())
     for item in items:
@@ -178,9 +182,11 @@ def calc_widths(items):
 
     output = [0] * len(items[0].get_fields())
     for index, c in enumerate(counter):
-        output[index] = c/total * 100
+        output[index] = c / total * 100
 
     return counter
+
+
 def generate_table_styles(table, config):
     # Table background color:
     color_options = str(config['colors']).split(';')
@@ -239,7 +245,6 @@ def set_font(soup, gen_attr):
 
     if selected:
         with open(gen_attr.temp_path + 'invoice.css', 'a', encoding="utf-8") as f:
-
             f.write('\nhtml, table {'
                     f'font-family: {font_choice};\n'
                     f'font-size: {size_choice}px;\n'
@@ -263,7 +268,6 @@ def to_percentage(small, big, invert):
 
 
 def extract_and_save_information(buf, gen_attr, global_annotation_object: [], html):
-    
     soup = BeautifulSoup(html, 'html.parser')
     height = soup.find('meta', attrs={'name': 'pdfkit-page-height'})['content']
     width = soup.find('meta', attrs={'name': 'pdfkit-page-width'})['content']
@@ -274,13 +278,16 @@ def extract_and_save_information(buf, gen_attr, global_annotation_object: [], ht
 
     annotation = Annotation()
 
-    # set relative path
-    annotation.data['image'] = \
-        "/data/local-files/?d=" + gen_attr.invoice_output_path.replace("pdf", "jpg")
+    path = gen_attr.label_studio_project_root.replace("\\", "\\\\")
 
-    with codecs.open(gen_attr.annotation_output_path, "w", encoding="utf-8") as file:
+    annotation.data['image'] = \
+        "/data/local-files/?d=" + path.replace("pdf", "jpg")
+
+    with codecs.open(os.path.normpath(gen_attr.annotation_output_path), "w", encoding="utf-8") as file:
         line = buf.getvalue()
-        matches = re.findall('position-absolute;[^;]*;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[^;]*;', line)
+        matches = re.findall(
+            'position-absolute;[^;]*;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[^;]*;',
+            line)
 
         annotation_object = AnnotationObject()
         annotation_object.ground_truth = False
@@ -315,6 +322,7 @@ def extract_and_save_information(buf, gen_attr, global_annotation_object: [], ht
         # Ensure correct utf-8 encoding
         jsonpickle.set_encoder_options('json', ensure_ascii=False)
         file.write(jsonpickle.encode(annotation, unpicklable=False, max_depth=10))
+
 
 """
 Reads in the JS-Script file and appends the script to the html file.

@@ -8,14 +8,15 @@ implemented as part of Elias Voill's bachelor's thesis.
 invogen --output <OUTPUT> --amount <AMOUNT> --input-html <INPUT_HTML> --input-css <INPUT_CSS>
 ```
 
-| Option | Description                                                                                                                                                              | Required | Default Value |
-|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|---------------|
-| `-o, --output <OUTPUT>` | Specifies the output file or directory.                                                                                                                                  | Yes | N/A |
-| `--amount <AMOUNT>` | Number of documents to generate                                                                                                                                          | Yes | N/A |
-| `--input-html <INPUT_HTML>` | Path of the input HTML file.                                                                                                                                             | Yes | N/A |
-| `--input-css <INPUT_CSS>` | Path of the input CSS file.                                                                                                                                              | Yes | N/A |
-| `--display-bounding-boxes` | Optional flag to display bounding boxes on the first generated invoice.                                                                                                  | No | `False` |
-| `--buffer-logos` | Optional flag to buffer logos.This will improve performance but reduces logo variation of consecutive invoices. Consider randomizing the order to  mitigate this effect. | No | `False` |
+| Option                       | Description                                                                                                                                                                                                                                                                             | Required | Default Value   |
+|------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|-----------------|
+| `-o, --output <OUTPUT>`      | Specifies the output file or directory.                                                                                                                                                                                                                                                 | Yes | N/A             |
+| `--amount <AMOUNT>`          | Number of documents to generate                                                                                                                                                                                                                                                         | Yes | N/A             |
+| `--input-html <INPUT_HTML>`  | Path of the input HTML file.                                                                                                                                                                                                                                                            | Yes | N/A             |
+| `--input-css <INPUT_CSS>`    | Path of the input CSS file.                                                                                                                                                                                                                                                             | Yes | N/A             |
+| `--display-bounding-boxes`   | Optional flag to display bounding boxes on the first generated invoice.                                                                                                                                                                                                                 | No | `False`         |
+| `--buffer-logos`             | Optional flag to buffer logos.This will improve performance but reduces logo variation of consecutive invoices. Consider randomizing the order to  mitigate this effect.                                                                                                                | No | `False`         |
+| `--label-studio-output-root` | Optional flag to define the absolute path to the desired output root. This path will be used to define image locations within the generated annotation file. Use this if you cannot directly generate data into the target LabelStudio folder. (see more at [#Use Invogen with Docker]) | No | Use output path |
 
 ## Documentation
 
@@ -132,15 +133,20 @@ It is stored in the [Label Studio import format](https://labelstud.io/guide/task
 To support batch import, once per job a file named ```~label_studio_import.json``` will be generated. This file contains annotation data of all invoices
 and can be used to import the entire job at once.
 
-### Use with Label Studio (Windows)
+### Use InvoGen with Label Studio (Windows)
 1. Setup Label Studio on your machine and run it in a terminal.
 2. Setup your Label Studio environment variables to support local file access (`LABEL_STUDIO_LOCAL_FILES_SERVING_ENABLED = true`, `LABEL_STUDIO_LOCAL_FILES_DOCUMENT_ROOT = <path>`,
 [see more](https://labelstud.io/guide/start#Run-Label-Studio-on-Docker-and-use-local-storage))
-3. Generate invoices with InvoGen in a subdirectory of the Label Studio root (as defined in step 2). (example `C:\Users\user\Documents\labelstudio\myjob\output`, with root set to `C:\Users\user\Documents\labelstudio`
+3. Generate invoices with InvoGen in a subdirectory of the Label Studio root (as defined in step 2). (example `C:\Users\user\Documents\LabelStudio\myjob\output`, with root set to `C:\Users\user\Documents\LabelStudio`
   Note: Data *has* to be directly generated into this directory to ensure relative paths are set correctly during the generation process.
 4. Create a new Label Studio project and define a desired labeling interface
-5. Under Settings -> Cloud Storage -> Add Source Storage -> Local Files: Define the *parent* path of the output folder as 'absolute local path'. (in our example `C:\Users\user\Documents\labelstudio\myjob\`)
-6. Import the `~label_studio_import.json` file which should be located at `C:\Users\user\Documents\labelstudio\myjob\output\annotation_data`
+5. Under Settings -> Cloud Storage -> Add Source Storage -> Local Files: Define the *parent* path of the output folder as 'absolute local path'. (in our example `C:\Users\user\Documents\LabelStudio\myjob\`)
+6. Import the `~label_studio_import.json` file which should be located at `C:\Users\user\Documents\LabelStudio\myjob\output\annotation_data`
+
+### Use InvoGen with Docker 
+A public InvoGen image is available [here](https://hub.docker.com/repository/docker/suessfeld/invogen/general). 
+Because Docker uses a mounted file system it is advised to use the option `--label-studio-output-root` to define the
+final output path.
 
 ## Extendability
 Invogen was designed in a way to make defining new generation rules easily. 

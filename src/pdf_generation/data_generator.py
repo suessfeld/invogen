@@ -112,7 +112,7 @@ class DataGenerator:
     def logo(self):
 
         if not self._buffer_logos:
-            logging.info("Sent API-request for logo fetching")
+            logging.debug("Sent API-request for logo fetching")
             name = ''.join(random.choice(string.ascii_lowercase) for _ in range(2))
             api_url = 'https://api.api-ninjas.com/v1/logo?name={}'.format(name)
             response = requests.get(api_url, headers={'X-Api-Key': LOGO_API_KEY})
@@ -134,7 +134,7 @@ class DataGenerator:
         api_url = f'{LOGO_API_URL}?name={name}'
         response = requests.get(api_url, headers={'X-Api-Key': LOGO_API_KEY})
 
-        logging.info("Sent API-request for logo fetching")
+        logging.debug("Sent API-request for logo fetching")
         if response.status_code == requests.codes.ok:
             json = response.json()
 
