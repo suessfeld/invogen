@@ -112,7 +112,7 @@ class DataGenerator:
     def logo(self):
 
         logo_fallback_urls = [
-            'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/512px-Microsoft_logo_%282012%29.svg.png',
+            'https://upload.wikimedia.org/wikipedia/commons/9/96/Microsoft_logo_%282012%29.svg',
             'https://upload.wikimedia.org/wikipedia/commons/7/7c/Spar-logo.svg',
             'https://upload.wikimedia.org/wikipedia/commons/1/17/Logitech_logo.svg',
             'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg',
