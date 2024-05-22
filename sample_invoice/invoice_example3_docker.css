@@ -1,0 +1,38 @@
+
+* {
+ margin: 0;
+ padding: 0;
+ white-space: nowrap;
+}
+
+h1 {
+ font-size: 50px;
+}
+
+#date {
+ margin-right: 50px;
+}
+
+#qr-code {
+ height: 150px;
+}
+
+#bar-code {
+    height: 200px;
+}
+
+@font-face {
+    font-family: "hypermarket";
+    src: url('file:///usr/src/app/fonts/Hypermarket-Regular.ttf') format('woff');
+}
+
+@font-face {
+    font-family: "fake-receipt";
+    src: url('file:///usr/src/app/fonts/Fake-Receipt.otf') format('opentype');
+}
+
+@font-face {
+    font-family: "telidon";
+    src: url('file:///usr/src/app/fonts/Telidon-Regular.ttf') format('woff');
+}
+
