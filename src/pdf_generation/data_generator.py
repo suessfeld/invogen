@@ -111,41 +111,63 @@ class DataGenerator:
 
     def logo(self):
 
-        if not self._buffer_logos:
-            logging.debug("Sent API-request for logo fetching")
+        logo_fallback_urls = [
+            'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Microsoft_logo_%282012%29.svg/512px-Microsoft_logo_%282012%29.svg.png',
+            'https://upload.wikimedia.org/wikipedia/commons/7/7c/Spar-logo.svg',
+            'https://upload.wikimedia.org/wikipedia/commons/1/17/Logitech_logo.svg',
+            'https://upload.wikimedia.org/wikipedia/commons/9/92/Audi-Logo_2016.svg',
+            'https://de.wikipedia.org/wiki/Blizzard_Entertainment#/media/Datei:Blizzard_Entertainment_Logo_2015.svg',
+            'https://upload.wikimedia.org/wikipedia/commons/d/d7/Acer-Logo_2011.png',
+            'https://upload.wikimedia.org/wikipedia/commons/c/ca/Walmart_logo.svg',
+            'https://de.m.wikipedia.org/wiki/Datei:Amazon_logo.svg',
+            'https://upload.wikimedia.org/wikipedia/de/1/1b/Billa_logo.svg',
+            'https://upload.wikimedia.org/wikipedia/commons/f/f0/Media_Markt_logo.svg']
+
+        try:
+
+            if not self._buffer_logos:
+                logging.debug("Sent API-request for logo fetching")
+                name = ''.join(random.choice(string.ascii_lowercase) for _ in range(2))
+                api_url = 'https://api.api-ninjas.com/v1/logo?name={}'.format(name)
+
+                response = requests.get(api_url, headers={'X-Api-Key': LOGO_API_KEY})
+
+                if response.status_code == requests.codes.ok:
+                    json = response.json()
+
+                    if len(json) == 0:
+                        return self.logo()
+
+                    return json[0]["image"]
+                else:
+                    raise Exception("API did not respond with 200")
+
+            if self._buffered_images:
+                img = random.choice(self._buffered_images)
+                self._buffered_images.remove(img)
+                return img["image"]
+
             name = ''.join(random.choice(string.ascii_lowercase) for _ in range(2))
-            api_url = 'https://api.api-ninjas.com/v1/logo?name={}'.format(name)
+            api_url = f'{LOGO_API_URL}?name={name}'
             response = requests.get(api_url, headers={'X-Api-Key': LOGO_API_KEY})
 
+            logging.debug("Sent API-request for logo fetching")
             if response.status_code == requests.codes.ok:
                 json = response.json()
 
                 if len(json) == 0:
                     return self.logo()
 
-                return json[0]["image"]
-
-        if self._buffered_images:
-            img = random.choice(self._buffered_images)
-            self._buffered_images.remove(img)
-            return img["image"]
-
-        name = ''.join(random.choice(string.ascii_lowercase) for _ in range(2))
-        api_url = f'{LOGO_API_URL}?name={name}'
-        response = requests.get(api_url, headers={'X-Api-Key': LOGO_API_KEY})
-
-        logging.debug("Sent API-request for logo fetching")
-        if response.status_code == requests.codes.ok:
-            json = response.json()
-
-            if len(json) == 0:
+                self._buffered_images = json
                 return self.logo()
 
-            self._buffered_images = json
-            return self.logo()
+            else:
+                raise Exception("API did not respond with 200")
 
-        else:
-            logging.error("Error:", response.status_code, response.text)
+        except Exception as e:
+            logging.info("Exception was encountered during API call. Fallback to base logos")
+            logging.info(e.__cause__)
+            return random.choice(logo_fallback_urls)
 
     def item_list(self, lower_bound, upper_bound, columns):
 
