@@ -15,8 +15,8 @@ invogen --output <OUTPUT> --amount <AMOUNT> --input-html <INPUT_HTML> --input-cs
 | `--input-html <INPUT_HTML>`  | Path of the input HTML file.                                                                                                                                                                                                                                                            | Yes | N/A             |
 | `--input-css <INPUT_CSS>`    | Path of the input CSS file.                                                                                                                                                                                                                                                             | Yes | N/A             |
 | `--display-bounding-boxes`   | Optional flag to display bounding boxes on the first generated invoice.                                                                                                                                                                                                                 | No | `False`         |
-| `--buffer-logos`             | Optional flag to buffer logos.This will improve performance but reduces logo variation of consecutive invoices. Consider randomizing the order to  mitigate this effect.                                                                                                                | No | `False`         |
-| `--label-studio-output-root` | Optional flag to define the absolute path to the desired output root. This path will be used to define image locations within the generated annotation file. Use this if you cannot directly generate data into the target LabelStudio folder. (see more at [#Use Invogen with Docker]) | No | Use output path |
+| `--buffer-logos`             | Optional flag to buffer logos.This will improve performance but reduces logo variation of consecutive invoices. Consider randomizing the output order to  mitigate this effect.                                                                                                                | No | `False`         |
+| `--label-studio-project-root` | Optional flag to define the absolute path to the desired project root. This path will be used to define image locations within the generated annotation file. Use this if you cannot directly generate data into the target Label Studio folder. ([see more](#use-invogen-with-docker)) | No | path from `--output` |
 
 ## Documentation
 
@@ -147,6 +147,32 @@ and can be used to import the entire job at once.
 A public InvoGen image is available [here](https://hub.docker.com/repository/docker/suessfeld/invogen/general). 
 Because Docker uses a mounted file system it is advised to use the option `--label-studio-output-root` to define the
 final output path.
+
+
+## Example
+Lets try out to generate a sample invoices with Docker
+1. Build (`docker build -t invogen .`) or pull your image of InvoGen
+2. Run the container with correct options
+   ```sh
+   docker run
+       -v "C:/Users/<user>/PycharmProjects/invogen/sample_invoice:/input"
+       -v "C:/Users/<user>/Documents/LabelStudio/myjob/invogen:/output"
+       invogen python ./src/invogen.py
+           --input-html /input/invoice_example3.html
+           --input-css /input/invoice_example3_docker.css
+           --output /output
+           --label-studio-project-root C:\Users\<user>\Documents\LabelStudio\myjob\invogen
+           --amount 100
+   ```
+   Explanation:
+   This command will generate 100 invoices into the `"C:/Users/<user>/Documents/LabelStudio/myjob/invogen/` directory and can be directly imported into Label Studio from exactly this location.
+   - `-v "C:/Users/<user>/PycharmProjects/invogen/sample_invoice:/input"` mounts the input directory
+   - `-v "C:/Users/<user>/Documents/LabelStudio/myjob/invogen:/output"` mounts the ouput directory
+   - `--input-html /input/invoice_example3.html` defines input html of mounted directory
+   - `--input-css /input/invoice_example3_docker.css` defines the input css of the mounted directory
+   - `--output /output` defines the ouput directory of the mounted ouput directory
+   - `--label-studio-project-root C:\Users\<user>\Documents\LabelStudio\myjob\invogen` defines the target output destination. Only if this path is correctly set, Label Studio will recognize the image paths when importing
+   - `--amount 100` generate 100 invoices
 
 ## Extendability
 Invogen was designed in a way to make defining new generation rules easily. 
