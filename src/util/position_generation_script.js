@@ -57,10 +57,36 @@ setTimeout(function () {
             var x2 = x1 + elem.getBoundingClientRect().width
             var y2 = y1 + elem.getBoundingClientRect().height
 
-            console.log("position-absolute;" + elem.id + ";" + x1 + ";" + y1 + ";" + x2 + ";" + y2 + ";"
-                + elem.innerHTML + ";");
+            if (elem.getAttribute("data-label") != null) {
+                console.log(replaceWithBytecode("position-absolute;" + elem.id + ";" + x1 + ";" + y1 + ";" + x2 + ";" + y2 + ";"
+                    + elem.innerHTML + ";" + elem.getAttribute("data-label") + ';'));
+            } else {
+                 console.log(replaceWithBytecode("position-absolute;" + elem.id + ";" + x1 + ";" + y1 + ";" + x2 + ";" + y2 + ";"
+                    + elem.innerHTML + ";;"));
+            }
         }
     }
+
+    function replaceWithBytecode(input) {
+        var replacements = {
+            'ü': 'C3BC', 'Ü': 'C39C',
+            'ö': 'C3B6', 'Ö': 'C396',
+            'ä': 'C3A4', 'Ä': 'C384',
+            '£': 'C2A3', '€': 'E282AC'
+        };
+
+        var result = '';
+        for (var i = 0; i < input.length; i++) {
+            var char = input[i];
+            if (replacements[char]) {
+                result += replacements[char];
+            } else {
+                result += char;
+            }
+        }
+
+    return result;
+}
 
     function randomIntFromInterval(min, max) {
         return Math.floor(Math.random() * (max - min + 1) + min);

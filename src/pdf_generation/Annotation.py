@@ -1,5 +1,5 @@
 
-class AnnotationValue:
+class TextAnnotation:
     x: float
     y: float
     width: float
@@ -7,10 +7,18 @@ class AnnotationValue:
     rotation: int
     text: []
 
+class LabelAnnotation:
+    x: float
+    y: float
+    width: float
+    height: float
+    rotation: int
+    rectanglelabels: []
+
 class AnnotationResult:
     id: str
     type: str
-    value: AnnotationValue
+    value: None
     to_name: str
     from_name: str
     image_rotation: int

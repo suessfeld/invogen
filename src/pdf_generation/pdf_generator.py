@@ -121,8 +121,8 @@ def render(gen_attr: GenerationAttributes, global_annotation_object: []):
 
         with io.StringIO() as buf, redirect_stdout(buf):
             pdf = pdfkit.from_string(html_file.read(), gen_attr.invoice_output_path, configuration=config,
-                                     options={"enable-local-file-access": ""}, css=gen_attr.temp_path + "invoice.css",
-                                     verbose=True)
+                                         options={"encoding":"utf-8", "enable-local-file-access": ""}, css=gen_attr.temp_path + "invoice.css",
+                                         verbose=True)
 
             with open(gen_attr.input_html, encoding="utf-8") as input_html:
                 extract_and_save_information(buf, gen_attr, global_annotation_object, input_html)

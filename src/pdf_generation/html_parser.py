@@ -10,9 +10,14 @@ import jsonpickle
 from bs4 import BeautifulSoup
 
 from pdf_generation import DataGenerator
-from pdf_generation.Annotation import Annotation, AnnotationObject, AnnotationValue, AnnotationResult
+from pdf_generation.Annotation import Annotation, AnnotationObject, TextAnnotation, AnnotationResult, LabelAnnotation
 from util.constants import *
 
+
+def format_attribute(attribute):
+    new_string = attribute.replace("_", " ")
+    new_string = new_string.title()
+    return new_string
 
 def fill_html(html, buffer_logos, gen_attr):
     data_generator = DataGenerator(buffer_logos)
@@ -55,22 +60,32 @@ def fill_html(html, buffer_logos, gen_attr):
                 elif data_type == 'address':
                     address = provided_types[data_type]()
 
+                    address_prefix = ""
+
+                    if str(elem["data-label"]) is not None:
+                        address_prefix = str(elem["data-label"]) + " "
+
                     street_div = soup.new_tag("div")
                     street_span = create_tag(soup, "span", str(elem["id"]) + "_street", address.street)
-                    number_span = create_tag(soup, "span", str(elem["id"]) + "_building_number",
+                    number_span = create_tag(soup, "span", str(elem["id"]) + "_street_number",
                                              address.building_number)
+                    number_span["data-label"] = address_prefix + "Street-Number"
+                    street_span["data-label"] = address_prefix + "Street"
                     street_div.append(street_span)
                     street_div.append(" ")
                     street_div.append(number_span)
 
                     city_div = soup.new_tag("div")
                     city_span = create_tag(soup, "span", str(elem["id"]) + "_city", address.city)
-                    postal_span = create_tag(soup, "span", str(elem["id"]) + "_postal_code", address.postal_code)
+                    city_span["data-label"] = address_prefix + "City"
+                    postal_span = create_tag(soup, "span", str(elem["id"]) + "_zip_code", address.postal_code)
+                    postal_span["data-label"] = address_prefix + "ZIP-Code"
                     city_div.append(city_span)
                     city_div.append(", ")
                     city_div.append(postal_span)
 
                     country_div = create_tag(soup, "span", str(elem["id"]) + "_country", address.country)
+                    country_div["data-label"] = address_prefix + "Country"
                     elem.append(street_div)
                     elem.append(city_div)
                     elem.append(country_div)
@@ -110,9 +125,10 @@ def fill_html(html, buffer_logos, gen_attr):
                         row = soup.new_tag("tr")
                         for field in item.get_fields():
                             td = soup.new_tag("td")
-                            td.append(create_tag(
-                                soup,
-                                "span", f'{str(elem["id"])}_item_{count}_{field.attribute}', field.value))
+                            item_element = create_tag(soup, "span", f'{str(elem["id"])}_item_{count}_{field.attribute}', field.value)
+                            item_element["data-label"] = "Item " + format_attribute(field.attribute)
+
+                            td.append(item_element)
 
                             row.append(td)
 
@@ -298,9 +314,9 @@ def extract_and_save_information(buf, gen_attr, global_annotation_object: [], ht
         "/data/local-files/?d=" + path.replace("pdf", "jpg")
 
     with codecs.open(os.path.normpath(gen_attr.annotation_output_path), "w", encoding="utf-8") as file:
-        line = buf.getvalue()
+        line = replace_bytecode_with_characters(buf.getvalue())
         matches = re.findall(
-            'position-absolute;[^;]*;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[^;]*;',
+            'position-absolute;[^;]*;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[0-9]+(?:\.[0-9]+)?;[^;]*;[^;]*;',
             line)
 
         annotation_object = AnnotationObject()
@@ -310,26 +326,51 @@ def extract_and_save_information(buf, gen_attr, global_annotation_object: [], ht
         for m in matches:
             string_arr = m.split(';')
 
-            annotation_result = AnnotationResult()
-            annotation_value = AnnotationValue()
+            annotation_result_textarea = AnnotationResult()
+            annotation_value_textarea = TextAnnotation()
 
-            annotation_result.type = "textarea"
-            annotation_result.id = string_arr[1]
-            annotation_result.to_name = "image"
-            annotation_result.from_name = "transcription"
-            annotation_result.image_rotation = 0
-            annotation_result.original_width = width
-            annotation_result.original_height = height
+            annotation_result_textarea.type = "textarea"
+            annotation_result_textarea.id = string_arr[1]
+            annotation_result_textarea.to_name = "image"
+            annotation_result_textarea.from_name = "textarea"
+            annotation_result_textarea.image_rotation = 0
+            annotation_result_textarea.original_width = width
+            annotation_result_textarea.original_height = height
 
-            annotation_value.x = to_percentage(string_arr[2], width, False)
-            annotation_value.y = to_percentage(string_arr[5], height, True)
-            annotation_value.width = to_percentage(abs(float(string_arr[4]) - float(string_arr[2])), width, False)
-            annotation_value.height = to_percentage(abs(float(string_arr[5]) - float(string_arr[3])), height, False)
-            annotation_value.rotation = 0
-            annotation_value.text = [string_arr[6]]
+            annotation_value_textarea.x = to_percentage(string_arr[2], width, False)
+            annotation_value_textarea.y = to_percentage(string_arr[5], height, True)
+            annotation_value_textarea.width = to_percentage(abs(float(string_arr[4]) - float(string_arr[2])), width, False)
+            annotation_value_textarea.height = to_percentage(abs(float(string_arr[5]) - float(string_arr[3])), height, False)
+            annotation_value_textarea.rotation = 0
+            annotation_value_textarea.text = [string_arr[6]]
 
-            annotation_result.value = annotation_value
-            annotation_object.result.append(annotation_result)
+            if string_arr[7] != '':
+                annotation_result_label = AnnotationResult()
+                annotation_value_label = LabelAnnotation()
+
+                annotation_result_label.type = "rectanglelabels"
+                annotation_result_label.id = string_arr[1]
+                annotation_result_label.to_name = "image"
+                annotation_result_label.from_name = "rectanglelabel"
+                annotation_result_label.image_rotation = 0
+                annotation_result_label.original_width = width
+                annotation_result_label.original_height = height
+
+                annotation_value_label.x = to_percentage(string_arr[2], width, False)
+                annotation_value_label.y = to_percentage(string_arr[5], height, True)
+                annotation_value_label.width = to_percentage(abs(float(string_arr[4]) - float(string_arr[2])), width,
+                                                                False)
+                annotation_value_label.height = to_percentage(abs(float(string_arr[5]) - float(string_arr[3])),
+                                                                 height, False)
+                annotation_value_label.rotation = 0
+                annotation_value_label.rectanglelabels = [string_arr[7]]
+
+                annotation_result_label.value = annotation_value_label
+                annotation_object.result.append(annotation_result_label)
+
+            annotation_result_textarea.value = annotation_value_textarea
+            annotation_object.result.append(annotation_result_textarea)
+
 
         annotation.annotations.append(annotation_object)
         global_annotation_object.append(annotation)
@@ -346,7 +387,7 @@ Reads in the JS-Script file and appends the script to the html file.
 def add_js_to_html(gen_attr):
     with open(DEFAULT_GENERATION_SCRIPT_PATH, encoding='utf-8') as script:
         soup = BeautifulSoup()
-        soup.append(BeautifulSoup("<script>" + script.read() + "</script>", features="html.parser"))
+        soup.append(BeautifulSoup('<script charset="utf-8">' + script.read() + '</script>', features='html.parser'))
 
     with open(os.path.normpath(gen_attr.temp_path + 'invoice.html'), 'a+', encoding="utf-8") as f:
         f.write(str(soup))
@@ -377,6 +418,26 @@ def generate_bounding_boxes(html, gen_attr):
     with open(gen_attr.temp_path + 'invoice.html', 'a+', encoding="utf-8") as f:
         f.write(str(output))
 
+def replace_bytecode_with_characters(input_string):
+    # Dictionary mapping bytecode sequences to their corresponding characters
+    replacements = {
+        'c3bc': 'ü', 'c39c': 'Ü',
+        'c3b6': 'ö', 'c396': 'Ö',
+        'c3a4': 'ä', 'c384': 'Ä',
+        'c2a3': '£', 'e282ac': '€'
+    }
+
+    # Function to use as replacement in re.sub
+    def replace_match(match):
+        return replacements[match.group(0).lower()]
+
+    # Create a regex pattern that matches any of the keys in the replacements dictionary
+    pattern = re.compile('|'.join(re.escape(key) for key in replacements.keys()), re.IGNORECASE)
+
+    # Replace all occurrences of the bytecode sequences with their corresponding characters
+    result = pattern.sub(replace_match, input_string)
+
+    return result
 
 class HTMLFileFormatError(Exception):
     def __init__(self, message):

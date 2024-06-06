@@ -1,3 +1,4 @@
+import codecs
 import logging
 import os.path
 import sys
