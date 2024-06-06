@@ -5,7 +5,7 @@ class AnnotationValue:
     width: float
     height: float
     rotation: int
-    rectanglelabels: []
+    text: []
 
 class AnnotationResult:
     id: str

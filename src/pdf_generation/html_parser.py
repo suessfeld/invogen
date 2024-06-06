@@ -313,10 +313,10 @@ def extract_and_save_information(buf, gen_attr, global_annotation_object: [], ht
             annotation_result = AnnotationResult()
             annotation_value = AnnotationValue()
 
-            annotation_result.type = "rectanglelabels"
+            annotation_result.type = "textarea"
             annotation_result.id = string_arr[1]
             annotation_result.to_name = "image"
-            annotation_result.from_name = "label"
+            annotation_result.from_name = "transcription"
             annotation_result.image_rotation = 0
             annotation_result.original_width = width
             annotation_result.original_height = height
@@ -326,7 +326,7 @@ def extract_and_save_information(buf, gen_attr, global_annotation_object: [], ht
             annotation_value.width = to_percentage(abs(float(string_arr[4]) - float(string_arr[2])), width, False)
             annotation_value.height = to_percentage(abs(float(string_arr[5]) - float(string_arr[3])), height, False)
             annotation_value.rotation = 0
-            annotation_value.rectanglelabels = [string_arr[6]]
+            annotation_value.text = [string_arr[6]]
 
             annotation_result.value = annotation_value
             annotation_object.result.append(annotation_result)
