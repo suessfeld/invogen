@@ -51,7 +51,6 @@ def generate_pdfs(gen_attr: GenerationAttributes):
         elapsed_start = time.time()
 
         for i in range(gen_attr.amount):
-            start = time.time()
             gen_attr.invoice_output_path = invoice_output_path
             gen_attr.invoice_output_path = invoice_output_path + DEFAULT_OUTPUT_NAME + str(i + 1) + ".pdf"
 
@@ -62,7 +61,7 @@ def generate_pdfs(gen_attr: GenerationAttributes):
 
             render(gen_attr, global_annotation_object)
             pdf_to_jpg(gen_attr.invoice_output_path)
-            end = time.time()
+
             logging.info(f'[{i + 1}/{gen_attr.amount}] Estimated reminder: {round((time.time() - elapsed_start) / (i + 1) * gen_attr.amount - (time.time() - elapsed_start), 2)} seconds')
 
     except Exception as e:
