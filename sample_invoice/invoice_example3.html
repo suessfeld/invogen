@@ -4,7 +4,6 @@
 <html data-fonts="hypermarket;fake-receipt;telidon" data-fontsize="15;18"
       data-fontcolor="black;#595959;#6e6e6e" data-background="#FFFFFF">
 <head>
-    <meta charset="UTF-8">
     <meta name="pdfkit-page-height" content="2430px"/>
     <meta name="pdfkit-page-width" content="500px"/>
     <meta name="pdfkit-margin-top" content="0px"/>
@@ -24,15 +23,15 @@
 <table data-position="100 2100 400 2171">
     <tbody>
     <tr>
-        <td><span id="billed_to_name" data-type="company"></span></td>
+        <td><span id="billed_to_name" data-type="company" data-label="Sender Company Name"></span></td>
     </tr>
     <tr>
-        <td><span id="billed_to_address" data-type="address"></span></td>
+        <td><span id="billed_to_address" data-type="address" data-label="Sender"></span></td>
     </tr>
     </tbody>
 </table>
 
-<div id="line_top" data-position="200 2075 300 2100" data-type="custom" data-list="
+<div data-position="200 2075 300 2100" data-type="custom" data-list="
 ---------------------------------------------------------------;---------------------------------------------------------------------------------------------------"></div>
 <table data-position="50 1900 450 2075">
     <tbody>
@@ -117,13 +116,13 @@
         <td><span>**********************************</span></td>
     </tr>
     <tr>
-        <td>Date: <strong id="date" data-type="invoice_date_natural"></strong></td>
+        <td>Date: <strong id="date" data-type="invoice_date_natural" data-label="Invoice Date"></strong></td>
     </tr>
     <tr>
         <td>Time: <strong id="timestamp" data-type="invoice_timestamp"></strong></td>
     </tr>
     <tr>
-        <td><span>Nr: <strong id="invoice_number" data-type="invoice_number"></strong></span></td>
+        <td><span>Nr: <strong id="invoice_number" data-type="invoice_number" data-label="Invoice Number"></strong></span></td>
     </tr>
     <tr>
         <td><span>Payed With: <strong id="payed_with" data-type="custom"
@@ -141,7 +140,7 @@
         <td><span>**********************************</span></td>
     </tr>
 </table>
-<div id="line_bottom" data-position="50 480 450 500" data-type="custom" data-list="
+<div data-position="50 480 450 500" data-type="custom" data-list="
 -----------------------------------------------------------;=====================================;
 "></div>
 <table data-position="50 380 250 480">

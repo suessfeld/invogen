@@ -22,10 +22,10 @@
 
     <table data-position="100 3000 600 3423" id="billed_to_table">
         <tr>
-            <td><strong><span id="billed_by_name" data-type="company"></span></strong></td>
+            <td><strong><span id="billed_by_name" data-type="company" data-label="Sender Company Name"></span></strong></td>
         </tr>
         <tr>
-            <td><span id="billed_by_address" data-type="address"></span></td>
+            <td><span id="billed_by_address" data-type="address" data-label="Sender"></span></td>
         </tr>
         <tr>
             <td><span id="billed_by_infos" data-type="custom"
@@ -51,7 +51,7 @@
             </td>
         </tr>
         <tr>
-            <td><span id="sold_to_address" data-type="address"></span></td>
+            <td><span id="sold_to_address" data-type="address" data-label="Receiver"></span></td>
         </tr>
     </table>
     <table id="invoice_table" data-position="600 2400 2277 2750">
@@ -60,10 +60,9 @@
             <td></td>
         </tr>
         <tr>
-            <td><span>Nr: <strong id="invoice_number" data-type="regex"
-                                  data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span></td>
+            <td><span>Nr: <strong id="invoice_number" data-type="invoice_number" data-label="Invoice Number" ></strong></span></td>
             <td><span data-type="custom" data-list="invoice date:;inv. date:;INVOICE DATE:"></span> <strong
-                    id="invoice_date" data-type="date"></strong></td>
+                    id="invoice_date" data-type="date" data-label="Invoice Date"></strong></td>
         </tr>
         <tr>
             <td><span>Payed With: <strong id="payed_with" data-type="custom"
@@ -108,7 +107,7 @@ The goods are owned by the manufacturer until payment is made in full.;
 Ownership of the goods remains with the manufacturer until full payment has been received."></span></td>
         </tr>
         <tr>
-            <td><span style="text-align: center" data-type="invoice_iban"></span>
+            <td><span style="text-align: center" data-type="invoice_iban" data-label="IBAN"></span>
             </td>
         </tr>
     </table>
@@ -147,7 +146,7 @@ The goods are owned by the manufacturer until payment is made in full.;
 Ownership of the goods remains with the manufacturer until full payment has been received."></span></td>
         </tr>
         <tr>
-            <td><span style="text-align: center" data-type="invoice_iban"></span>
+            <td><span style="text-align: center" data-type="invoice_iban" data-label="IBAN"></span>
             </td>
         </tr>
     </table>

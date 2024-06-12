@@ -63,8 +63,7 @@ def generate_pdfs(gen_attr: GenerationAttributes):
             render(gen_attr, global_annotation_object)
             pdf_to_jpg(gen_attr.invoice_output_path)
             end = time.time()
-            logging.info(f'\n[{i + 1}/{gen_attr.amount}] Generated {gen_attr.invoice_output_path} in {round(end - start, 2)} seconds.'
-                         f'\n[{i + 1}/{gen_attr.amount}] Estimated reminder: {round((time.time() - elapsed_start) / (i + 1) * gen_attr.amount - (time.time() - elapsed_start), 2)} seconds')
+            logging.info(f'[{i + 1}/{gen_attr.amount}] Estimated reminder: {round((time.time() - elapsed_start) / (i + 1) * gen_attr.amount - (time.time() - elapsed_start), 2)} seconds')
 
     except Exception as e:
         logging.error("An exception was encountered during generation. Progress is saved.")

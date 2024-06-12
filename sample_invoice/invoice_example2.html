@@ -14,7 +14,7 @@
     <meta name="pdfkit-debug-javascript" content=""/>
 </head>
 
-<img id="logo" data-position="200 3200 800 3423" data-type="logo" data-config='
+<img data-position="200 3200 800 3423" data-type="logo" data-config='
 {
     "width": "200;300"
 }
@@ -22,30 +22,30 @@
 <h1 id="header" data-position="1250 3000 2277 3100" data-type="custom" data-list="
 Invoice;Receipt;INVOICE; I n v o i c e; ;invoice;receipt"></h1>
 
-<table data-position="200 2800 1220 3150" id="billed_to_table">
+<table data-position="200 2800 1220 3150">
     <tr>
-        <td><span id="billed_to_name" data-type="company"></span></td>
+        <td><span id="billed_to_name" data-type="company" data-label="Sender Company Name"></span></td>
     </tr>
     <tr>
-        <td><span id="billed_to_address" data-type="address"></span></td>
+        <td><span id="billed_to_address" data-type="address" data-label="Sender"></span></td>
     </tr>
     <td><span data-type="custom" data-list="PHONE: ;phone: ;Contact:"></span><strong id="customer_service_phonenumber" data-type="regex" data-regex="^\([0-9]{3}\)[0-9]{3}-[0-9]{4}$"></strong></td>
 </table>
 
-<table data-position="200 2400 1220 2750" id="sold_to_table">
+<table data-position="200 2400 1220 2750">
     <tr>
         <td><strong data-type="custom" data-list="SOLD TO; Sold To; Customer; Customer Information:; Customer Address:"></strong></td>
     </tr>
     <tr>
-        <td><span id="sold_to_name" data-type="company"></span></td>
+        <td><span id="sold_to_name" data-type="company" data-label="Receiver Company Name"></span></td>
     </tr>
     <tr>
-        <td><span id="sold_to_address" data-type="address"></span></td>
+        <td><span id="sold_to_address" data-type="address" data-label="Receiver"></span></td>
     </tr>
 </table>
 <table data-position="1260 2400 2277 2950">
     <tr>
-        <td><strong data-type="custom" data-list="SUMMARY; Billing summary; INFORMATION"></strong></td>
+        <td><strong id="summary" data-type="custom" data-list="SUMMARY; Billing summary; INFORMATION"></strong></td>
     </tr>
     <tr>
         <td><span data-type="custom" data-list="***********;;---------------------"></span></td>
@@ -54,7 +54,7 @@ Invoice;Receipt;INVOICE; I n v o i c e; ;invoice;receipt"></h1>
         <td>Date: <strong id="date" data-type="date"></strong></span></td>
     </tr>
     <tr>
-        <td><span>Nr: <strong id="invoice_number" data-type="regex" data-regex="[0-9]{3,5}[\/\\|\-.][0-9]{8,15}"></strong></span></td>
+        <td><span>Nr: <strong id="invoice_number" data-type="invoice_number" data-label="Invoice Number"></strong></span></td>
     </tr>
     <tr>
         <td><span>Payed With: <strong id="payed_with" data-type="custom" data-list="Mastercard;Visa;American Express"></strong></span></td>
@@ -104,9 +104,9 @@ ADDITIONAL;EXTRAS:"></h2>
     "columns": "number;name;description;article_number;quantity;price"
 }
 '></table>
-<h2 data-position="1240 900 1240 970" data-type="custom" data-list="
+<h2 id="end_text" data-position="1240 900 1240 970" data-type="custom" data-list="
 Payment Information:;Transaction Summary"></h2>
-<table id="payment-table" data-position="50 700 2400 900">
+<table data-position="50 700 2400 900">
     <tr>
         <th><span id="item_list_header_name">Type</span></th>
         <th><span id="item_list_header_description">Date</span></th>
@@ -115,15 +115,15 @@ Payment Information:;Transaction Summary"></h2>
         <th><span id="item_list_header_price">Description</span></th>
     </tr>
     <tr>
-        <td><span data-type="custom" data-list="ELECTRONIC;CASH"></span></td>
-        <td><span data-type="date"></span></td>
-        <td><span data-type="regex" data-regex="[A-Za-z]-\d{4,8}"></span></td>
-        <td><span data-type="custom" data-list="Credit Card; Debit Card; Cash"></span></td>
-        <td><span data-type="regex" data-regex="(MasterCard|VISA|AMEX)\*{14}\d{4}"></span></td>
+        <td><span id="item_list_header_name_value" data-type="custom" data-list="ELECTRONIC;CASH"></span></td>
+        <td><span id="item_list_header_description_value" data-type="date"></span></td>
+        <td><span id="item_list_header_article_number_value" data-type="regex" data-regex="[A-Za-z]-\d{4,8}"></span></td>
+        <td><span id="item_list_header_tax_value" data-type="custom" data-list="Credit Card; Debit Card; Cash"></span></td>
+        <td><span  id="item_list_header_price_value" data-type="regex" data-regex="(MasterCard|VISA|AMEX)\*{14}\d{4}"></span></td>
     </tr>
 
 </table>
-<img id="qr-code-url" data-position="300 200 800 500"
+<img data-position="300 200 800 500"
      data-type="qr_code_url" data-config='
 {
     "height": "250;300"
